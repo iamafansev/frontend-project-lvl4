@@ -1,5 +1,5 @@
 {
-  "name": "frontend_l4_chat_project",
+  "name": "chat",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -21,7 +21,7 @@
     "type": "git",
     "url": "git@github.com:hexlet-components/projects-frontend-l4-server.git"
   },
-  "author": "Kirill Mokevnin",
+  "author": "Oleg Afanasev",
   "license": "ISC",
   "homepage": "",
   "dependencies": {
