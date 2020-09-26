@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-filename-extension */
 
-import ReactDOM from 'react-dom';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import gon from 'gon';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -11,6 +12,7 @@ import 'regenerator-runtime/runtime';
 // import io from 'socket.io-client';
 
 import App from './components/App';
+import store from './redux/store';
 import '../assets/application.scss';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -18,6 +20,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 ReactDOM.render(
-  <App data={gon} />,
+  <Provider store={store}>
+    <App data={gon} />
+  </Provider>,
   document.getElementById('chat'),
 );

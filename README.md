@@ -16,3 +16,5 @@ $ make install
 $ make start
 # open http://localhost:5000
 ```
+
+[Go to Chat app](https://blooming-wildwood-78196.herokuapp.com/)
