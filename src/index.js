@@ -17,8 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-console.log('gon', gon);
-
 ReactDOM.render(
   <App data={gon} />,
   document.getElementById('chat'),
