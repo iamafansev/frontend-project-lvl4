@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import counterSlice from './slices/counter';
+import channelsSlice from './slices/channels';
+import messagesSlice from './slices/messages';
 
 const reducer = {
-  [counterSlice.name]: counterSlice.reducer,
+  [channelsSlice.name]: channelsSlice.reducer,
+  [messagesSlice.name]: messagesSlice.reducer,
 };
 
 const store = configureStore({ reducer });
