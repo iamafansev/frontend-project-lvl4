@@ -1,10 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import cn from 'classnames';
+import Button from 'react-bootstrap/Button';
 
 import channelsSlice from '../redux/slices/channels';
+import modalSlice from '../redux/slices/modal';
 
 const { actions: { setCurrentChannelId } } = channelsSlice;
+const { actions: { openModal } } = modalSlice;
 
 const ChannelList = () => {
   const dispatch = useDispatch();
@@ -13,27 +15,27 @@ const ChannelList = () => {
     currentChannelId: state.channels.currentChannelId,
   }));
 
+  const handleAddChannel = () => dispatch(openModal({ type: 'addChannel' }));
   const handleClickChannel = (id) => () => dispatch(setCurrentChannelId(id));
 
   return (
     <>
       <div className="d-flex mb-2">
         <span>Channels</span>
-        <button type="button" className="ml-auto p-0 btn btn-link">+</button>
+        <Button className="ml-auto p-0" variant="link" onClick={handleAddChannel}>+</Button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill">
         {channels.map(({ id, name }) => (
           <li key={id} className="nav-item">
-            <button
+            <Button
               type="button"
-              className={cn('nav-link', 'btn-block', 'mb-2', 'text-left', 'btn', {
-                'btn-primary': id === currentChannelId,
-                'btn-light': id !== currentChannelId,
-              })}
+              block
+              className="mb-2 text-left"
+              variant={id === currentChannelId ? 'primary' : 'light'}
               onClick={handleClickChannel(id)}
             >
               {name}
-            </button>
+            </Button>
           </li>
         ))}
       </ul>

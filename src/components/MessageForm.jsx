@@ -1,25 +1,24 @@
 import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { Formik, Form, Field } from 'formik';
+import Button from 'react-bootstrap/Button';
 
-import routes from '../routes';
 import UserContext from '../UserContext';
+import { createMessage } from '../redux/slices/messages';
 
 const MessageForm = () => {
+  const dispatch = useDispatch();
   const channelId = useSelector((state) => state.channels.currentChannelId);
   const nickname = useContext(UserContext);
 
-  const handleSubmit = ({ body }, { resetForm, setErrors }) => {
-    const route = routes.channelMessagesPath(channelId);
-    const attributes = { nickname, body };
-
-    return axios
-      .post(route, { data: { attributes } })
+  const handleSubmit = ({ body }, { resetForm, setErrors }) => (
+    dispatch(createMessage({ channelId, nickname, body }))
+      .then(unwrapResult)
       .then(resetForm)
-      .catch(() => setErrors({ submittingError: 'Network error. Please try again.' }));
-  };
+      .catch(() => setErrors({ submittingError: 'Network error. Please try again.' }))
+  );
 
   return (
     <Formik initialValues={{ body: '' }} onSubmit={handleSubmit}>
@@ -28,13 +27,7 @@ const MessageForm = () => {
           <div className="form-group">
             <div className="input-group">
               <Field name="body" className={cn('mr-2', 'form-control', { 'is-invalid': !!submittingError })} />
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isSubmitting || !dirty}
-              >
-                Submit
-              </button>
+              <Button type="submit" disabled={isSubmitting || !dirty}>Submit</Button>
               {!!submittingError && (
                 <div className="d-block invalid-feedback">{submittingError}</div>
               )}
