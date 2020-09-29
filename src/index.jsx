@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -24,12 +23,27 @@ if (process.env.NODE_ENV !== 'production') {
 
 const { dispatch } = store;
 const { actions: { setMessages, addMessage } } = messagesSlice;
-const { actions: { setChannels, setCurrentChannelId } } = channelsSlice;
+const {
+  actions: {
+    setChannels,
+    setCurrentChannelId,
+    addChannel,
+    renameChannel,
+  },
+} = channelsSlice;
 
 const socket = io('/');
 
-socket.on('newMessage', ({ data: { attributes: message } }) => {
-  dispatch(addMessage(message));
+socket.on('newChannel', ({ data: { attributes } }) => {
+  dispatch(addChannel(attributes));
+});
+
+socket.on('renameChannel', ({ data: { attributes } }) => {
+  dispatch(renameChannel(attributes));
+});
+
+socket.on('newMessage', ({ data: { attributes } }) => {
+  dispatch(addMessage(attributes));
 });
 
 dispatch(setChannels(gon.channels));

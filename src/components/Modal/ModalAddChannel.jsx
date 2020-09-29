@@ -1,12 +1,14 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
-import BootstrapModal from 'react-bootstrap/Modal';
+import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-import modalSlice from '../redux/slices/modal';
+import { createChannel } from '../../redux/slices/channels';
+import modalSlice from '../../redux/slices/modal';
 
 const { actions: { closeModal } } = modalSlice;
 
@@ -17,19 +19,27 @@ const schema = Yup.object().shape({
     .required('Field is required'),
 });
 
-const Modal = () => {
+const ModalAddChannel = () => {
   const dispatch = useDispatch();
-  const { isOpened } = useSelector(({ modal }) => modal);
 
-  const handleSubmit = () => {};
   const handleClose = () => dispatch(closeModal());
 
+  const handleSubmit = ({ name }, { resetForm, setErrors }) => (
+    dispatch(createChannel(name))
+      .then(unwrapResult)
+      .then(() => {
+        resetForm();
+        handleClose();
+      })
+      .catch(() => setErrors({ submittingError: 'Network error. Please try again.' }))
+  );
+
   return (
-    <BootstrapModal show={isOpened} onHide={handleClose}>
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Add channel</BootstrapModal.Title>
-      </BootstrapModal.Header>
-      <BootstrapModal.Body>
+    <Modal show onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add channel</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         <Formik
           initialValues={{ name: '' }}
           validationSchema={schema}
@@ -63,9 +73,9 @@ const Modal = () => {
             </Form>
           )}
         </Formik>
-      </BootstrapModal.Body>
-    </BootstrapModal>
+      </Modal.Body>
+    </Modal>
   );
 };
 
-export default Modal;
+export default ModalAddChannel;
