@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import cn from 'classnames';
 import { Formik, Form } from 'formik';
 import Button from 'react-bootstrap/Button';
 
 import UserContext from '../UserContext';
 import { createMessage } from '../redux/slices/messages';
 import Field from './Field';
+import Feedback from './Feedback';
 
 const MessageForm = () => {
   const dispatch = useDispatch();
@@ -27,11 +27,9 @@ const MessageForm = () => {
         <Form autoComplete="off">
           <div className="form-group">
             <div className="input-group">
-              <Field name="body" autoFocus className={cn('mr-2', 'form-control', { 'is-invalid': !!submittingError })} />
+              <Field name="body" autoFocus isInvalid={!!submittingError} />
               <Button type="submit" disabled={isSubmitting || !dirty}>Submit</Button>
-              {!!submittingError && (
-                <div className="d-block invalid-feedback">{submittingError}</div>
-              )}
+              {!!submittingError && <Feedback message={submittingError} />}
             </div>
           </div>
         </Form>

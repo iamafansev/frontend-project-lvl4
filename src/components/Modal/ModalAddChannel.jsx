@@ -3,21 +3,22 @@ import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import cn from 'classnames';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
+import { ERRORS, formFieldsError } from '../../constants';
 import { createChannel } from '../../redux/slices/channels';
 import modalSlice from '../../redux/slices/modal';
 import Field from '../Field';
+import Feedback from '../Feedback';
 
 const { actions: { closeModal } } = modalSlice;
 
 const schema = Yup.object().shape({
   name: Yup.string()
-    .min(3, 'Minimum 3 characters')
-    .max(20, 'Must be no more than 20 characters')
-    .required('Field is required'),
+    .min(3, formFieldsError.min(3))
+    .max(20, formFieldsError.max(20))
+    .required(formFieldsError.required()),
 });
 
 const ModalAddChannel = () => {
@@ -32,7 +33,7 @@ const ModalAddChannel = () => {
         resetForm();
         handleClose();
       })
-      .catch(() => setErrors({ submittingError: 'Network error. Please try again.' }))
+      .catch(() => setErrors({ submittingError: ERRORS.network }))
   );
 
   return (
@@ -47,15 +48,16 @@ const ModalAddChannel = () => {
           onSubmit={handleSubmit}
         >
           {({
-            errors, touched, isSubmitting, dirty, isValid,
+            errors, touched, isSubmitting, dirty, isValid, submittingError,
           }) => (
             <Form autoComplete="off">
               <div className="form-group">
                 <Field
                   name="name"
                   autoFocus
-                  className={cn('mb-2', 'form-control', { 'is-invalid': touched.name && errors.name })}
+                  isInvalid={touched.name && errors.name}
                 />
+                {!!submittingError && <Feedback message={submittingError} />}
                 <div className="d-flex justify-content-end">
                   <Button variant="secondary" className="mr-2" onClick={handleClose}>
                     Close
