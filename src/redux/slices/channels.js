@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import keyBy from 'lodash/keyBy';
+import omit from 'lodash/omit';
+import without from 'lodash/without';
 
 import routes from '../../routes';
 
@@ -34,27 +37,36 @@ export const renameChannel = createAsyncThunk(
 
 const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { list: [], currentChannelId: null },
+  initialState: { byId: {}, ids: [], currentChannelId: null },
   reducers: {
-    setChannels: (state, { payload }) => ({ ...state, list: payload }),
+    setChannels: (state, { payload }) => ({
+      ...state,
+      byId: keyBy(payload, 'id'),
+      ids: payload.map(({ id }) => id),
+    }),
     setCurrentChannelId: (state, { payload }) => ({ ...state, currentChannelId: payload }),
-    addChannel: (state, { payload }) => ({ ...state, list: [...state.list, payload] }),
-    renameChannel: (state, { payload: { id, name } }) => {
-      const newList = state.list.reduce((acc, channel) => {
-        const newChannel = channel.id === id
-          ? { ...channel, name }
-          : channel;
-
-        return [...acc, newChannel];
-      }, []);
-
-      return { ...state, list: newList };
+    addChannel: (state, { payload }) => {
+      const { id } = payload;
+      return {
+        ...state,
+        byId: { ...state.byId, [id]: payload },
+        ids: [...state.ids, id],
+      };
     },
-    removeChannel: ({ list, currentChannelId }, { payload: { id } }) => {
-      const newList = list.filter((channel) => channel.id !== id);
-      const newCurrentChannelId = id === currentChannelId ? newList[0].id : currentChannelId;
+    renameChannel: (state, { payload: { id, name } }) => {
+      const { byId } = state;
+      const currentChannel = state.byId[id];
 
-      return { list: newList, currentChannelId: newCurrentChannelId };
+      return { ...state, byId: { ...byId, [id]: { ...currentChannel, name } } };
+    },
+    removeChannel: ({ byId, ids, currentChannelId }, { payload: { id } }) => {
+      const newCurrentChannelId = id === currentChannelId ? ids[0] : currentChannelId;
+
+      return {
+        ids: without(ids, id),
+        byId: omit(byId, id),
+        currentChannelId: newCurrentChannelId,
+      };
     },
   },
 });

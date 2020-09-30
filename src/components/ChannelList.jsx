@@ -4,7 +4,6 @@ import cn from 'classnames';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
-import SplitButton from 'react-bootstrap/SplitButton';
 
 import channelsSlice from '../redux/slices/channels';
 import modalSlice from '../redux/slices/modal';
@@ -15,7 +14,7 @@ const { actions: { openModal } } = modalSlice;
 const ChannelList = () => {
   const dispatch = useDispatch();
   const { channels, currentChannelId } = useSelector((state) => ({
-    channels: state.channels.list,
+    channels: state.channels.ids.map((id) => state.channels.byId[id]),
     currentChannelId: state.channels.currentChannelId,
   }));
 

@@ -3,7 +3,7 @@ import React from 'react';
 import ChannelList from './ChannelList';
 import Messages from './Messages';
 import MessageForm from './MessageForm';
-import Modal from './Modal';
+import Modal from './Modal/index.jsx';
 
 const App = () => (
   <>

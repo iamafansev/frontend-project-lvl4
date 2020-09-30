@@ -11,7 +11,7 @@ import Field from './Field';
 
 const MessageForm = () => {
   const dispatch = useDispatch();
-  const channelId = useSelector((state) => state.channels.currentChannelId);
+  const channelId = useSelector(({ channels: { currentChannelId } }) => currentChannelId);
   const nickname = useContext(UserContext);
 
   const handleSubmit = ({ body }, { resetForm, setErrors }) => (
