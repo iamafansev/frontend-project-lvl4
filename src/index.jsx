@@ -11,16 +11,19 @@ import cookies from 'js-cookie';
 import io from 'socket.io-client';
 
 import App from './components/App';
-import store from './redux/store';
+import initStore from './redux/initStore';
 import channelsSlice from './redux/slices/channels';
 import messagesSlice from './redux/slices/messages';
 import UserContext from './UserContext';
 import '../assets/application.scss';
 
+const socket = io('/');
+
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
+const store = initStore();
 const { dispatch } = store;
 const { actions: { setMessages, addMessage } } = messagesSlice;
 const {
@@ -33,23 +36,10 @@ const {
   },
 } = channelsSlice;
 
-const socket = io('/');
-
-socket.on('newChannel', ({ data: { attributes } }) => {
-  dispatch(addChannel(attributes));
-});
-
-socket.on('renameChannel', ({ data: { attributes } }) => {
-  dispatch(renameChannel(attributes));
-});
-
-socket.on('removeChannel', ({ data: { id } }) => {
-  dispatch(removeChannel({ id }));
-});
-
-socket.on('newMessage', ({ data: { attributes } }) => {
-  dispatch(addMessage(attributes));
-});
+socket.on('newChannel', (data) => dispatch(addChannel(data)));
+socket.on('renameChannel', (data) => dispatch(renameChannel(data)));
+socket.on('removeChannel', (data) => dispatch(removeChannel(data)));
+socket.on('newMessage', (data) => dispatch(addMessage(data)));
 
 dispatch(setChannels(gon.channels));
 dispatch(setCurrentChannelId(gon.currentChannelId));

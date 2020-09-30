@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
 import Button from 'react-bootstrap/Button';
 
+import { ERRORS } from '../constants';
 import UserContext from '../UserContext';
-import { createMessage } from '../redux/slices/messages';
+import { createMessageAsync } from '../redux/slices/messages';
 import Field from './Field';
 import Feedback from './Feedback';
 
@@ -15,10 +16,10 @@ const MessageForm = () => {
   const nickname = useContext(UserContext);
 
   const handleSubmit = ({ body }, { resetForm, setErrors }) => (
-    dispatch(createMessage({ channelId, nickname, body }))
+    dispatch(createMessageAsync({ channelId, nickname, body }))
       .then(unwrapResult)
       .then(resetForm)
-      .catch(() => setErrors({ submittingError: 'Network error. Please try again.' }))
+      .catch(() => setErrors({ submittingError: ERRORS.network }))
   );
 
   return (

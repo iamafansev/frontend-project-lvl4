@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS, formFieldsError } from '../../constants';
-import { createChannel } from '../../redux/slices/channels';
+import { createChannelAsync } from '../../redux/slices/channels';
 import modalSlice from '../../redux/slices/modal';
 import Field from '../Field';
 import Feedback from '../Feedback';
@@ -27,7 +27,7 @@ const ModalAddChannel = () => {
   const handleClose = () => dispatch(closeModal());
 
   const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(createChannel(name))
+    dispatch(createChannelAsync(name))
       .then(unwrapResult)
       .then(() => {
         resetForm();

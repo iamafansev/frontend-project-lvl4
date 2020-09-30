@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS, formFieldsError } from '../../constants';
-import { renameChannel } from '../../redux/slices/channels';
+import { renameChannelAsync } from '../../redux/slices/channels';
 import modalSlice from '../../redux/slices/modal';
 import Field from '../Field';
 import Feedback from '../Feedback';
@@ -29,7 +29,7 @@ const ModalRenameChannel = () => {
   const handleClose = () => dispatch(closeModal());
 
   const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(renameChannel({ id, name }))
+    dispatch(renameChannelAsync({ id, name }))
       .then(unwrapResult)
       .then(() => {
         resetForm();
