@@ -29,6 +29,7 @@ const {
     setCurrentChannelId,
     addChannel,
     renameChannel,
+    removeChannel,
   },
 } = channelsSlice;
 
@@ -40,6 +41,10 @@ socket.on('newChannel', ({ data: { attributes } }) => {
 
 socket.on('renameChannel', ({ data: { attributes } }) => {
   dispatch(renameChannel(attributes));
+});
+
+socket.on('removeChannel', ({ data: { id } }) => {
+  dispatch(removeChannel({ id }));
 });
 
 socket.on('newMessage', ({ data: { attributes } }) => {

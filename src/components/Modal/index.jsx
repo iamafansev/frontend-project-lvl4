@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import ModalAddChannel from './ModalAddChannel';
 import ModalRenameChannel from './ModalRenameChannel';
+import ModalConfirmRemoveChannel from './ModalConfirmRemoveChannel';
 
 const Modal = () => {
   const { isOpened, type } = useSelector(({ modal }) => modal);
@@ -16,6 +17,8 @@ const Modal = () => {
       return <ModalAddChannel />;
     case 'renameChannel':
       return <ModalRenameChannel />;
+    case 'removeChannel':
+      return <ModalConfirmRemoveChannel />;
     default:
       return null;
   }

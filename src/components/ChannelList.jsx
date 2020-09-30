@@ -4,6 +4,7 @@ import cn from 'classnames';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import SplitButton from 'react-bootstrap/SplitButton';
 
 import channelsSlice from '../redux/slices/channels';
 import modalSlice from '../redux/slices/modal';
@@ -39,13 +40,11 @@ const ChannelList = () => {
       <Dropdown.Toggle split variant={id === currentChannelId ? 'primary' : 'light'} />
       <Dropdown.Menu>
         <Dropdown.Item
-          eventKey="1"
           onClick={handleClickOpenModal({ type: 'removeChannel', data: { channelId: id } })}
         >
           Remove
         </Dropdown.Item>
         <Dropdown.Item
-          eventKey="2"
           onClick={handleClickOpenModal({ type: 'renameChannel', data: { channelId: id } })}
         >
           Rename

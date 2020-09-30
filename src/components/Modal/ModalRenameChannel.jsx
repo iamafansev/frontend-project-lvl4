@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import Modal from 'react-bootstrap/Modal';
@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 
 import { renameChannel } from '../../redux/slices/channels';
 import modalSlice from '../../redux/slices/modal';
+import Field from '../Field';
 
 const { actions: { closeModal } } = modalSlice;
 
@@ -22,6 +23,10 @@ const schema = Yup.object().shape({
 const ModalRenameChannel = () => {
   const dispatch = useDispatch();
   const id = useSelector(({ modal: { data } }) => data.channelId);
+  const currentName = useSelector(({ channels: { list } }) => {
+    const currentChannel = list.find((channel) => channel.id === id);
+    return currentChannel.name;
+  });
 
   const handleClose = () => dispatch(closeModal());
 
@@ -36,13 +41,13 @@ const ModalRenameChannel = () => {
   );
 
   return (
-    <Modal show onHide={handleClose}>
+    <Modal show onHide={handleClose} restoreFocus={false}>
       <Modal.Header closeButton>
         <Modal.Title>Rename channel</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ name: '' }}
+          initialValues={{ name: currentName }}
           validationSchema={schema}
           onSubmit={handleSubmit}
         >
@@ -53,11 +58,9 @@ const ModalRenameChannel = () => {
               <div className="form-group">
                 <Field
                   name="name"
+                  autoFocus
                   className={cn('mb-2', 'form-control', { 'is-invalid': touched.name && errors.name })}
                 />
-                {errors.name && touched.name && (
-                  <div className="d-block mb-2 invalid-feedback">{errors.name}</div>
-                )}
                 <div className="d-flex justify-content-end">
                   <Button variant="secondary" className="mr-2" onClick={handleClose}>
                     Close
