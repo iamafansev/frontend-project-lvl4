@@ -48,16 +48,17 @@ const ModalAddChannel = () => {
           onSubmit={handleSubmit}
         >
           {({
-            errors, touched, isSubmitting, dirty, isValid, submittingError,
+            errors, touched, isSubmitting, dirty, isValid,
           }) => (
             <Form autoComplete="off">
               <div className="form-group">
                 <Field
                   name="name"
                   autoFocus
+                  className="mb-2"
                   isInvalid={touched.name && errors.name}
                 />
-                {!!submittingError && <Feedback message={submittingError} />}
+                {!!errors.submittingError && <Feedback message={errors.submittingError} />}
                 <div className="d-flex justify-content-end">
                   <Button variant="secondary" className="mr-2" onClick={handleClose}>
                     Close

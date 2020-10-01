@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from 'formik';
 import cn from 'classnames';
 
-const TextField = ({ isInvalid, ...fieldProps }) => {
+const TextField = ({ isInvalid, className, ...fieldProps }) => {
   const [field, meta] = useField(fieldProps);
 
   return (
@@ -10,7 +10,7 @@ const TextField = ({ isInvalid, ...fieldProps }) => {
       <input
         {...field}
         {...fieldProps}
-        className={cn('mb-2', 'form-control', { 'is-invalid': isInvalid })}
+        className={cn('form-control', className, { 'is-invalid': isInvalid })}
       />
       {isInvalid && (
         <div className="d-block mb-2 invalid-feedback">

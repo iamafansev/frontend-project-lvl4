@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS } from '../constants';
-import UserContext from '../UserContext';
+import UserContext from './UserContext';
 import { createMessageAsync } from '../redux/slices/messages';
 import Field from './Field';
 import Feedback from './Feedback';
@@ -13,7 +13,7 @@ import Feedback from './Feedback';
 const MessageForm = () => {
   const dispatch = useDispatch();
   const channelId = useSelector(({ channels: { currentChannelId } }) => currentChannelId);
-  const nickname = useContext(UserContext);
+  const { nickname } = useContext(UserContext);
 
   const handleSubmit = ({ body }, { resetForm, setErrors }) => (
     dispatch(createMessageAsync({ channelId, nickname, body }))
@@ -28,7 +28,7 @@ const MessageForm = () => {
         <Form autoComplete="off">
           <div className="form-group">
             <div className="input-group">
-              <Field name="body" autoFocus isInvalid={!!submittingError} />
+              <Field name="body" autoFocus className="mr-2" isInvalid={!!submittingError} />
               <Button type="submit" disabled={isSubmitting || !dirty}>Submit</Button>
               {!!submittingError && <Feedback message={submittingError} />}
             </div>
