@@ -13,8 +13,6 @@ import channelsSlice from './redux/slices/channels';
 import messagesSlice from './redux/slices/messages';
 import '../assets/application.scss';
 
-const socket = io('/');
-
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
@@ -31,6 +29,8 @@ const {
     removeChannel,
   },
 } = channelsSlice;
+
+const socket = io();
 
 socket.on('newChannel', (data) => dispatch(addChannel(data)));
 socket.on('renameChannel', (data) => dispatch(renameChannel(data)));
