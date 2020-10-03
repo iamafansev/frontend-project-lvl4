@@ -35,10 +35,10 @@ const {
 
 const socket = io();
 
-socket.on('newChannel', (data) => dispatch(addChannel(data)));
-socket.on('renameChannel', (data) => dispatch(renameChannel(data)));
-socket.on('removeChannel', (data) => dispatch(removeChannel(data)));
-socket.on('newMessage', (data) => dispatch(addMessage(data)));
+socket.on('newChannel', ({ data: { attributes } }) => dispatch(addChannel(attributes)));
+socket.on('renameChannel', ({ data: { attributes } }) => dispatch(renameChannel(attributes)));
+socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));
+socket.on('newMessage', ({ data: { attributes } }) => dispatch(addMessage(attributes)));
 
 ReactDOM.render(
   <Provider store={store}>

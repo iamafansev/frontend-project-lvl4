@@ -17,11 +17,12 @@ const messagesSlice = createSlice({
   name: 'messages',
   initialState: { list: [] },
   reducers: {
-    setMessages: (state, { payload: messages }) => ({ list: messages }),
     addMessage: ({ list }, { payload: message }) => ({ list: [...list, message] }),
-    removeMessagesByChannelId: ({ list }, { payload: channelId }) => (
-      { list: list.filter((message) => message.channelId !== channelId) }
-    ),
+    removeMessagesByChannelId: ({ list }, { payload: channelId }) => {
+      const filteredList = list.filter((message) => message.channelId !== channelId);
+
+      return { list: filteredList };
+    },
   },
 });
 

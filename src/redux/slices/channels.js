@@ -1,8 +1,5 @@
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import keyBy from 'lodash/keyBy';
-import omit from 'lodash/omit';
-import without from 'lodash/without';
 
 import routes from '../../routes';
 
@@ -39,7 +36,6 @@ const channelsSlice = createSlice({
   name: 'channels',
   initialState: { list: [], currentChannelId: null },
   reducers: {
-    setChannels: (state, { payload: channels }) => ({ ...state, list: channels }),
     setCurrentChannelId: (state, { payload: currentChannelId }) => (
       { ...state, currentChannelId }
     ),
@@ -55,7 +51,7 @@ const channelsSlice = createSlice({
       return { ...state, list: newList };
     },
     removeChannel: (state, { payload: id }) => (
-      { ...state, list: state.list.filter((channel) => channel !== id) }
+      { ...state, list: state.list.filter((channel) => channel.id !== id) }
     ),
   },
 });

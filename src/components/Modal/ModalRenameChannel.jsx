@@ -24,7 +24,10 @@ const schema = Yup.object().shape({
 const ModalRenameChannel = () => {
   const dispatch = useDispatch();
   const id = useSelector(({ modal: { data } }) => data.channelId);
-  const currentName = useSelector(({ channels: { byId } }) => byId[id].name);
+  const currentName = useSelector(({ channels: { list } }) => {
+    const { name } = list.find((channel) => channel.id === id);
+    return name;
+  });
 
   const handleClose = () => dispatch(closeModal());
 
