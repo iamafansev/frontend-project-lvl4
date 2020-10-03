@@ -37,46 +37,26 @@ export const renameChannelAsync = createAsyncThunk(
 
 const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { byId: {}, ids: [], currentChannelId: null },
+  initialState: { list: [], currentChannelId: null },
   reducers: {
-    setChannels: (state, { payload: channels }) => ({
-      ...state,
-      byId: keyBy(channels, 'id'),
-      ids: channels.map(({ id }) => id),
-    }),
+    setChannels: (state, { payload: channels }) => ({ ...state, list: channels }),
     setCurrentChannelId: (state, { payload: currentChannelId }) => (
       { ...state, currentChannelId }
     ),
-    addChannel: (state, { payload }) => {
-      const { data: { attributes } } = payload;
-      const { id } = attributes;
+    addChannel: (state, { payload: channel }) => ({
+      ...state,
+      list: [...state.list, channel],
+    }),
+    renameChannel: (state, { payload: { id, name } }) => {
+      const newList = state.list.map((channel) => (
+        channel.id === id ? { ...channel, name } : channel
+      ));
 
-      return {
-        ...state,
-        byId: { ...state.byId, [id]: attributes },
-        ids: [...state.ids, id],
-      };
+      return { ...state, list: newList };
     },
-    renameChannel: (state, { payload }) => {
-      const { byId } = state;
-      const { data: { attributes } } = payload;
-      const { id, name } = attributes;
-
-      const currentChannel = state.byId[id];
-
-      return { ...state, byId: { ...byId, [id]: { ...currentChannel, name } } };
-    },
-    removeChannel: (state, { payload }) => {
-      const { byId, ids, currentChannelId } = state;
-      const { data: { id } } = payload;
-      const newCurrentChannelId = id === currentChannelId ? ids[0] : currentChannelId;
-
-      return {
-        ids: without(ids, id),
-        byId: omit(byId, id),
-        currentChannelId: newCurrentChannelId,
-      };
-    },
+    removeChannel: (state, { payload: id }) => (
+      { ...state, list: state.list.filter((channel) => channel !== id) }
+    ),
   },
 });
 

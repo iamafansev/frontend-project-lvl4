@@ -4,11 +4,10 @@ import { useSelector } from 'react-redux';
 const selectCurrentMessages = (state) => {
   const {
     channels: { currentChannelId },
-    messages: { ids, byId },
+    messages: { list: messages },
   } = state;
 
-  return ids
-    .map((id) => byId[id])
+  return messages
     .filter(({ channelId }) => channelId === currentChannelId);
 };
 

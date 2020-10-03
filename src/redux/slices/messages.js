@@ -1,5 +1,4 @@
 import axios from 'axios';
-import keyBy from 'lodash/keyBy';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import routes from '../../routes';
@@ -16,21 +15,13 @@ export const createMessageAsync = createAsyncThunk(
 
 const messagesSlice = createSlice({
   name: 'messages',
-  initialState: { byId: {}, ids: [] },
+  initialState: { list: [] },
   reducers: {
-    setMessages: (state, { payload: messages }) => ({
-      byId: keyBy(messages, 'id'),
-      ids: messages.map(({ id }) => id),
-    }),
-    addMessage: (state, { payload }) => {
-      const { data: { attributes } } = payload;
-      const { id } = attributes;
-
-      return {
-        byId: { ...state.byId, [id]: attributes },
-        ids: [...state.ids, id],
-      };
-    },
+    setMessages: (state, { payload: messages }) => ({ list: messages }),
+    addMessage: ({ list }, { payload: message }) => ({ list: [...list, message] }),
+    removeMessagesByChannelId: ({ list }, { payload: channelId }) => (
+      { list: list.filter((message) => message.channelId !== channelId) }
+    ),
   },
 });
 

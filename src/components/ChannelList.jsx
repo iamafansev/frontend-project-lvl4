@@ -14,7 +14,7 @@ const { actions: { openModal } } = modalSlice;
 const ChannelList = () => {
   const dispatch = useDispatch();
   const { channels, currentChannelId } = useSelector((state) => ({
-    channels: state.channels.ids.map((id) => state.channels.byId[id]),
+    channels: state.channels.list,
     currentChannelId: state.channels.currentChannelId,
   }));
 
