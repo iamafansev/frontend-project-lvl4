@@ -10,4 +10,4 @@ const reducer = {
   [modalSlice.name]: modalSlice.reducer,
 };
 
-export default () => configureStore({ reducer });
+export default (preloadedState) => configureStore({ reducer, preloadedState });

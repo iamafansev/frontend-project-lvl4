@@ -17,13 +17,16 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-const store = initStore();
+const preloadedState = {
+  channels: { list: gon.channels, currentChannelId: gon.currentChannelId },
+  messages: { list: gon.messages },
+};
+
+const store = initStore(preloadedState);
 const { dispatch } = store;
-const { actions: { setMessages, addMessage } } = messagesSlice;
+const { actions: { addMessage } } = messagesSlice;
 const {
   actions: {
-    setChannels,
-    setCurrentChannelId,
     addChannel,
     renameChannel,
     removeChannel,
@@ -36,10 +39,6 @@ socket.on('newChannel', (data) => dispatch(addChannel(data)));
 socket.on('renameChannel', (data) => dispatch(renameChannel(data)));
 socket.on('removeChannel', (data) => dispatch(removeChannel(data)));
 socket.on('newMessage', (data) => dispatch(addMessage(data)));
-
-dispatch(setChannels(gon.channels));
-dispatch(setCurrentChannelId(gon.currentChannelId));
-dispatch(setMessages(gon.messages));
 
 ReactDOM.render(
   <Provider store={store}>
