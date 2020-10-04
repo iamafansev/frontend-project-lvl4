@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import differenceWith from 'lodash/differenceWith';
+import isEqual from 'lodash/isEqual';
+import first from 'lodash/first';
 
 import routes from '../../routes';
 
@@ -32,6 +35,16 @@ export const renameChannelAsync = createAsyncThunk(
   },
 );
 
+export const fetchChannelsAsync = createAsyncThunk(
+  'messages/fetchChannels',
+  async () => {
+    const route = routes.channelsPath();
+    const { data: { data } } = await axios.get(route);
+
+    return data.map(({ attributes }) => attributes);
+  },
+);
+
 const channelsSlice = createSlice({
   name: 'channels',
   initialState: { list: [], currentChannelId: null },
@@ -50,9 +63,22 @@ const channelsSlice = createSlice({
 
       return { ...state, list: newList };
     },
-    removeChannel: (state, { payload: id }) => (
-      { ...state, list: state.list.filter((channel) => channel.id !== id) }
-    ),
+    removeChannel: ({ currentChannelId, list }, { payload: id }) => {
+      const newCurrentChannelId = currentChannelId === id
+        ? first(list).id
+        : currentChannelId;
+
+      return {
+        currentChannelId: newCurrentChannelId,
+        list: list.filter((channel) => channel.id !== id),
+      };
+    },
+  },
+  extraReducers: {
+    [fetchChannelsAsync.fulfilled]: ({ list }, { payload: channels }) => {
+      const diff = differenceWith(channels, list, isEqual);
+      list.push(...diff);
+    },
   },
 });
 
