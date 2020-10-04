@@ -16,6 +16,7 @@ const { actions: { closeModal } } = modalSlice;
 
 const schema = Yup.object().shape({
   name: Yup.string()
+    .trim()
     .min(3, formFieldsError.min(3))
     .max(20, formFieldsError.max(20))
     .required(formFieldsError.required()),
@@ -32,7 +33,7 @@ const ModalRenameChannel = () => {
   const handleClose = () => dispatch(closeModal());
 
   const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(renameChannelAsync({ id, name }))
+    dispatch(renameChannelAsync({ id, name: name.trim() }))
       .then(unwrapResult)
       .then(() => {
         resetForm();

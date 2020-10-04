@@ -17,7 +17,7 @@ const Messages = () => {
   return (
     <div className="chat-messages overflow-auto mb-3">
       {currentMessages.map(({ id, nickname, body }) => (
-        <div key={id}>
+        <div key={id} className="text-break">
           <b>{nickname}</b>
           {': '}
           {body}
