@@ -28,7 +28,7 @@ const MessageForm = () => {
         <Form autoComplete="off">
           <div className="form-group">
             <div className="input-group">
-              <Field name="body" autoFocus className="mr-2" isInvalid={!!submittingError} />
+              <Field name="body" disabled={isSubmitting} autoFocus className="mr-2" isInvalid={!!submittingError} />
               <Button type="submit" disabled={isSubmitting || !dirty}>Submit</Button>
               {!!submittingError && <Feedback message={submittingError} />}
             </div>

@@ -56,6 +56,7 @@ const ModalAddChannel = () => {
                   name="name"
                   autoFocus
                   className="mb-2"
+                  disabled={isSubmitting}
                   isInvalid={touched.name && errors.name}
                 />
                 {!!errors.submittingError && <Feedback message={errors.submittingError} />}
