@@ -15,7 +15,7 @@ const Messages = () => {
   const currentMessages = useSelector(selectCurrentMessages);
 
   return (
-    <div className="chat-messages overflow-auto mb-3">
+    <div className="overflow-auto mb-3">
       {currentMessages.map(({ id, nickname, body }) => (
         <div key={id} className="text-break">
           <b>{nickname}</b>
