@@ -35,7 +35,7 @@ const ModalRenameChannel = () => {
   const handleClose = () => dispatch(closeModal());
 
   const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(renameChannelAsync({ id, name: name.trim() }))
+    dispatch(renameChannelAsync({ id, name: name.trimRight() }))
       .then(unwrapResult)
       .then(() => {
         resetForm();

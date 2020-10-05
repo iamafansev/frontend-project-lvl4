@@ -29,7 +29,7 @@ const ModalAddChannel = () => {
   const handleClose = () => dispatch(closeModal());
 
   const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(createChannelAsync(name.trim()))
+    dispatch(createChannelAsync(name.trimRight()))
       .then(unwrapResult)
       .then(() => {
         resetForm();

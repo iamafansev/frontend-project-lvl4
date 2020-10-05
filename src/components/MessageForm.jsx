@@ -19,7 +19,7 @@ const MessageForm = () => {
   const setFocusOnBody = () => bodyRef.current.focus();
 
   const handleSubmit = ({ body }, { resetForm, setErrors }) => (
-    dispatch(createMessageAsync({ channelId, nickname, body: body.trim() }))
+    dispatch(createMessageAsync({ channelId, nickname, body: body.trimRight() }))
       .then(unwrapResult)
       .then(resetForm)
       .then(setFocusOnBody)
