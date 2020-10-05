@@ -16,7 +16,6 @@ const { actions: { closeModal } } = modalSlice;
 
 const schema = Yup.object().shape({
   name: Yup.string()
-    .trim()
     .min(3, formFieldsError.min(3))
     .max(20, formFieldsError.max(20))
     .required(formFieldsError.required()),

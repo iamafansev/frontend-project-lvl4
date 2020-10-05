@@ -1,7 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import Button from 'react-bootstrap/Button';
 
@@ -10,10 +9,6 @@ import UserContext from './UserContext';
 import { createMessageAsync } from '../redux/slices/messages';
 import Field from './Field';
 import Feedback from './Feedback';
-
-const schema = Yup.object().shape({
-  body: Yup.string().trim().min(1),
-});
 
 const MessageForm = () => {
   const dispatch = useDispatch();
@@ -32,7 +27,7 @@ const MessageForm = () => {
   );
 
   return (
-    <Formik initialValues={{ body: '' }} onSubmit={handleSubmit} validationSchema={schema}>
+    <Formik initialValues={{ body: '' }} onSubmit={handleSubmit}>
       {({
         isValid, isSubmitting, dirty, errors: { submittingError },
       }) => (
