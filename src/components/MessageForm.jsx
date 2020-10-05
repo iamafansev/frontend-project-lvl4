@@ -34,8 +34,8 @@ const MessageForm = () => {
       }) => (
         <Form autoComplete="off">
           <div className="form-group">
-            <div className="input-group flex-nowrap">
-              <Field name="body" disabled={isSubmitting} autoFocus className="mr-2" isInvalid={!!submittingError} />
+            <div className="input-group">
+              <Field name="body" disabled={isSubmitting} autoFocus className="mr-2" />
               <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
               {!!submittingError && <Feedback message={submittingError} />}
             </div>
