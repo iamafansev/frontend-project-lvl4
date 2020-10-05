@@ -2,14 +2,18 @@ import React from 'react';
 import { useField } from 'formik';
 import cn from 'classnames';
 
-const TextField = ({ isInvalid, className, ...fieldProps }) => {
-  const [field, meta] = useField(fieldProps);
+const TextField = ({
+  name, disabled, autoFocus, isInvalid, className,
+}) => {
+  const [field, meta] = useField({ name });
 
   return (
     <>
       <input
         {...field}
-        {...fieldProps}
+        name={name}
+        disabled={disabled}
+        autoFocus={autoFocus}
         className={cn('form-control', className, { 'is-invalid': isInvalid })}
       />
       {isInvalid && (

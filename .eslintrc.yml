@@ -32,3 +32,4 @@ rules:
   functional/no-try-statement: 0
   functional/no-throw-statement: 0
   react/jsx-props-no-spreading: 0
+  jsx-a11y/no-autofocus: 0
