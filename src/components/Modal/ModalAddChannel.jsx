@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -14,15 +14,17 @@ import Feedback from '../Feedback';
 
 const { actions: { closeModal } } = modalSlice;
 
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, formFieldsError.min(3))
-    .max(20, formFieldsError.max(20))
-    .required(formFieldsError.required()),
-});
-
 const ModalAddChannel = () => {
   const dispatch = useDispatch();
+  const channalNames = useSelector((state) => state.channels.list.map(({ name }) => name));
+
+  const schema = useMemo(() => Yup.object().shape({
+    name: Yup.string()
+      .min(3, formFieldsError.min(3))
+      .max(20, formFieldsError.max(20))
+      .notOneOf(channalNames, formFieldsError.notAvailable())
+      .required(formFieldsError.required()),
+  }), [channalNames]);
 
   const handleClose = () => dispatch(closeModal());
 

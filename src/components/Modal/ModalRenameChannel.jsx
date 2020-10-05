@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
@@ -14,20 +14,23 @@ import Feedback from '../Feedback';
 
 const { actions: { closeModal } } = modalSlice;
 
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, formFieldsError.min(3))
-    .max(20, formFieldsError.max(20))
-    .required(formFieldsError.required()),
-});
-
 const ModalRenameChannel = () => {
   const dispatch = useDispatch();
   const id = useSelector(({ modal: { data } }) => data.channelId);
-  const currentName = useSelector(({ channels: { list } }) => {
+
+  const { currentName, channalNames } = useSelector(({ channels: { list } }) => {
     const { name } = list.find((channel) => channel.id === id);
-    return name;
+    const allNames = list.map((channel) => channel.name);
+    return { currentName: name, channalNames: allNames };
   });
+
+  const schema = useMemo(() => Yup.object().shape({
+    name: Yup.string()
+      .min(3, formFieldsError.min(3))
+      .max(20, formFieldsError.max(20))
+      .notOneOf(channalNames, formFieldsError.notAvailable())
+      .required(formFieldsError.required()),
+  }), [channalNames]);
 
   const handleClose = () => dispatch(closeModal());
 
