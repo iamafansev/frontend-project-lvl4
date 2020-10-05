@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -19,11 +19,15 @@ const MessageForm = () => {
   const dispatch = useDispatch();
   const channelId = useSelector(({ channels: { currentChannelId } }) => currentChannelId);
   const { nickname } = useContext(UserContext);
+  const bodyRef = useRef();
+
+  const setFocusOnBody = () => bodyRef.current.focus();
 
   const handleSubmit = ({ body }, { resetForm, setErrors }) => (
     dispatch(createMessageAsync({ channelId, nickname, body: body.trim() }))
       .then(unwrapResult)
       .then(resetForm)
+      .then(setFocusOnBody)
       .catch(() => setErrors({ submittingError: ERRORS.network }))
   );
 
@@ -35,7 +39,7 @@ const MessageForm = () => {
         <Form autoComplete="off">
           <div className="form-group">
             <div className="input-group">
-              <Field name="body" disabled={isSubmitting} autoFocus className="mr-2" />
+              <Field name="body" forwardRef={bodyRef} disabled={isSubmitting} autoFocus className="mr-2" />
               <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
               {!!submittingError && <Feedback message={submittingError} />}
             </div>

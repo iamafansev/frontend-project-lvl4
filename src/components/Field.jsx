@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import cn from 'classnames';
 
 const TextField = ({
-  name, disabled, autoFocus, isInvalid, className,
+  name, disabled, autoFocus, isInvalid, className, forwardRef = null,
 }) => {
   const [field, meta] = useField({ name });
 
@@ -14,6 +14,7 @@ const TextField = ({
         name={name}
         disabled={disabled}
         autoFocus={autoFocus}
+        ref={forwardRef}
         className={cn('form-control', className, { 'is-invalid': isInvalid })}
       />
       {isInvalid && (
