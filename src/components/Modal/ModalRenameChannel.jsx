@@ -10,7 +10,7 @@ import { ERRORS, formFieldsError } from '../../constants';
 import { renameChannelAsync } from '../../redux/slices/channels';
 import modalSlice from '../../redux/slices/modal';
 import Field from '../Field';
-import Feedback from '../Feedback';
+import InvalidFeedback from '../InvalidFeedback';
 
 const { actions: { closeModal } } = modalSlice;
 
@@ -69,7 +69,7 @@ const ModalRenameChannel = () => {
                   disabled={isSubmitting}
                   isInvalid={touched.name && errors.name}
                 />
-                {!!errors.submittingError && <Feedback message={errors.submittingError} />}
+                {!!errors.submittingError && <InvalidFeedback message={errors.submittingError} />}
                 <div className="d-flex justify-content-end">
                   <Button variant="secondary" className="mr-2" onClick={handleClose}>
                     Close

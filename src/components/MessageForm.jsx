@@ -8,7 +8,7 @@ import { ERRORS } from '../constants';
 import UserContext from './UserContext';
 import { createMessageAsync } from '../redux/slices/messages';
 import Field from './Field';
-import Feedback from './Feedback';
+import InvalidFeedback from './InvalidFeedback';
 
 const MessageForm = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const MessageForm = () => {
             <div className="input-group">
               <Field name="body" forwardRef={bodyRef} disabled={isSubmitting} autoFocus className="mr-2" />
               <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
-              {!!submittingError && <Feedback message={submittingError} />}
+              {!!submittingError && <InvalidFeedback message={submittingError} />}
             </div>
           </div>
         </Form>

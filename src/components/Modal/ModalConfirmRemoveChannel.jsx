@@ -8,7 +8,7 @@ import { ERRORS } from '../../constants';
 import { removeChannelAsync } from '../../redux/slices/channels';
 import messagesSlice from '../../redux/slices/messages';
 import modalSlice from '../../redux/slices/modal';
-import Feedback from '../Feedback';
+import InvalidFeedback from '../InvalidFeedback';
 
 const { actions: { closeModal } } = modalSlice;
 const { actions: { removeMessagesByChannelId } } = messagesSlice;
@@ -35,7 +35,7 @@ const ModalConfirmRemoveChannel = () => {
       </Modal.Header>
       <Modal.Body>
         Are you sure?
-        {!!submittingError && <Feedback message={submittingError} />}
+        {!!submittingError && <InvalidFeedback message={submittingError} />}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>Close</Button>
