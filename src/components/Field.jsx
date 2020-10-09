@@ -1,10 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { useField } from 'formik';
-import cn from 'classnames';
 import trimStart from 'lodash/trimStart';
 import last from 'lodash/last';
-
-import InvalidFeedback from './InvalidFeedback';
+import Form from 'react-bootstrap/Form';
 
 const TextField = ({
   name, disabled, autoFocus, isInvalid, className, forwardRef = null,
@@ -24,18 +22,23 @@ const TextField = ({
 
   return (
     <>
-      <input
+      <Form.Control
         {...restFieldProps}
         name={name}
         disabled={disabled}
         autoFocus={autoFocus}
         ref={forwardRef}
         onChange={handleOnChange}
-        className={cn('form-control', className, { 'is-invalid': isInvalid })}
+        isInvalid={isInvalid}
+        className={className}
       />
-      {isInvalid && <InvalidFeedback className="mb-2" message={meta.error} />}
+      {meta.error && (
+        <Form.Control.Feedback type="invalid">
+          {meta.error}
+        </Form.Control.Feedback>
+      )}
     </>
   );
 };
 
-export default TextField;
+export default memo(TextField);

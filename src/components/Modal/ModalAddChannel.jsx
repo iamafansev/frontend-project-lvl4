@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
+import FormBootstrap from 'react-bootstrap/Form';
 import * as Yup from 'yup';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -55,7 +56,7 @@ const ModalAddChannel = () => {
             errors, touched, isSubmitting, dirty, isValid,
           }) => (
             <Form autoComplete="off">
-              <div className="form-group">
+              <FormBootstrap.Group>
                 <Field
                   name="name"
                   autoFocus
@@ -76,7 +77,7 @@ const ModalAddChannel = () => {
                     Add
                   </Button>
                 </div>
-              </div>
+              </FormBootstrap.Group>
             </Form>
           )}
         </Formik>

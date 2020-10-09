@@ -2,6 +2,8 @@ import React, { useContext, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
+import FormBootstrap from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS } from '../constants';
@@ -32,13 +34,22 @@ const MessageForm = () => {
         isValid, isSubmitting, dirty, errors: { submittingError },
       }) => (
         <Form autoComplete="off">
-          <div className="form-group">
-            <div className="input-group">
-              <Field name="body" forwardRef={bodyRef} disabled={isSubmitting} autoFocus className="mr-2" />
-              <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
-              {!!submittingError && <InvalidFeedback message={submittingError} />}
-            </div>
-          </div>
+          <FormBootstrap.Group>
+            <InputGroup>
+              <Field
+                name="body"
+                forwardRef={bodyRef}
+                disabled={isSubmitting}
+                isInvalid={submittingError}
+                autoFocus
+                className="mr-2"
+              />
+              <InputGroup.Append>
+                <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
+              </InputGroup.Append>
+            </InputGroup>
+            {!!submittingError && <InvalidFeedback message={submittingError} />}
+          </FormBootstrap.Group>
         </Form>
       )}
     </Formik>
