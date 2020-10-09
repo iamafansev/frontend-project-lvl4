@@ -1,5 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { animateScroll } from 'react-scroll';
+
+const MESSAGES_CONTAINER_ID = 'messagesContainer';
+const scrollMessagesContainerToBottom = () => animateScroll.scrollToBottom({
+  duration: 0,
+  containerId: MESSAGES_CONTAINER_ID,
+});
 
 const selectCurrentMessages = (state) => {
   const {
@@ -12,19 +19,14 @@ const selectCurrentMessages = (state) => {
 };
 
 const Messages = () => {
-  const messagesContainerRef = useRef();
   const currentMessages = useSelector(selectCurrentMessages);
 
-  const getHeightMessagesContainer = () => messagesContainerRef.current.clientHeight;
-  const setScrollY = (coordY) => messagesContainerRef.current.scrollTo(0, coordY);
-
   useEffect(() => {
-    const messagesContainerHeight = getHeightMessagesContainer();
-    setScrollY(messagesContainerHeight);
+    scrollMessagesContainerToBottom();
   }, [currentMessages]);
 
   return (
-    <div ref={messagesContainerRef} className="overflow-auto mb-3 pr-3">
+    <div className="overflow-auto mb-3 pr-3" id={MESSAGES_CONTAINER_ID}>
       {currentMessages.map(({ id, nickname, body }) => (
         <div key={id} className="text-break">
           <b>{nickname}</b>
