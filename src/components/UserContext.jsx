@@ -12,13 +12,11 @@ if (isEmpty(nickname)) {
 }
 
 const UserContext = React.createContext();
-const { Consumer } = UserContext;
 
-const UserProvider = ({ children }) => (
+export const UserProvider = ({ children }) => (
   <UserContext.Provider value={{ nickname }}>
     {children}
   </UserContext.Provider>
 );
 
-export { UserProvider, Consumer as UserConsumer };
 export default UserContext;
