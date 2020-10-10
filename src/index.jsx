@@ -43,10 +43,7 @@ const fetchChannelsAndMessages = () => dispatch(fetchChannelsAsync())
     dispatch(fetchMessagesByChannelIdsAsync(channelIds));
   });
 
-socket.on('connect', () => console.log('connect'));
 socket.on('reconnect', fetchChannelsAndMessages);
-socket.on('disconnect', () => console.log('disconnect'));
-
 socket.on('newChannel', ({ data: { attributes } }) => dispatch(addChannel(attributes)));
 socket.on('renameChannel', ({ data: { attributes } }) => dispatch(renameChannel(attributes)));
 socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));
