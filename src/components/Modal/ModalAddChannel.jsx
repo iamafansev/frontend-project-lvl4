@@ -15,19 +15,19 @@ import InvalidFeedback from '../InvalidFeedback';
 
 const { actions: { closeModal } } = modalSlice;
 
-const getSсhema = (channalNames) => Yup.object().shape({
+const getSсhema = (channelNames) => Yup.object().shape({
   name: Yup.string()
     .min(3, formFieldsError.min(3))
     .max(20, formFieldsError.max(20))
-    .notOneOf(channalNames, formFieldsError.notAvailable())
+    .notOneOf(channelNames, formFieldsError.notAvailable())
     .required(formFieldsError.required()),
 });
 
 const ModalAddChannel = () => {
   const dispatch = useDispatch();
-  const channalNames = useSelector((state) => state.channels.list.map(({ name }) => name));
+  const channelNames = useSelector((state) => state.channels.list.map(({ name }) => name));
 
-  const schema = useMemo(() => getSсhema(channalNames), [channalNames]);
+  const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 
   const handleClose = () => dispatch(closeModal());
 

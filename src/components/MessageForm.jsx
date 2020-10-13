@@ -2,15 +2,21 @@ import React, { useContext, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import FormBootstrap from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
-import { ERRORS } from '../constants';
+import { ERRORS, formFieldsError } from '../constants';
 import UserContext from './UserContext';
 import { createMessageAsync } from '../redux/slices/messages';
 import Field from './Field';
 import InvalidFeedback from './InvalidFeedback';
+
+const schema = Yup.object().shape({
+  body: Yup.string()
+    .max(400, formFieldsError.max(400)),
+});
 
 const MessageForm = () => {
   const dispatch = useDispatch();
@@ -29,9 +35,9 @@ const MessageForm = () => {
   );
 
   return (
-    <Formik initialValues={{ body: '' }} onSubmit={handleSubmit}>
+    <Formik initialValues={{ body: '' }} onSubmit={handleSubmit} validationSchema={schema}>
       {({
-        isValid, isSubmitting, dirty, errors: { submittingError },
+        touched, isValid, isSubmitting, dirty, errors: { body: bodyError, submittingError },
       }) => (
         <Form autoComplete="off">
           <FormBootstrap.Group>
@@ -48,6 +54,7 @@ const MessageForm = () => {
                 <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
               </InputGroup.Append>
             </InputGroup>
+            {touched.body && bodyError && <InvalidFeedback message={bodyError} />}
             {!!submittingError && <InvalidFeedback message={submittingError} />}
           </FormBootstrap.Group>
         </Form>
