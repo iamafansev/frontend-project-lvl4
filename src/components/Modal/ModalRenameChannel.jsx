@@ -27,9 +27,9 @@ const ModalRenameChannel = () => {
   const dispatch = useDispatch();
   const id = useSelector(({ modal: { data } }) => data.channelId);
 
-  const { currentName, channelNames } = useSelector(({ channels: { list } }) => {
-    const { name } = list.find((channel) => channel.id === id);
-    const allNames = list.map((channel) => channel.name);
+  const { currentName, channelNames } = useSelector(({ channels }) => {
+    const { name } = channels.channels.find((channel) => channel.id === id);
+    const allNames = channels.channels.map((channel) => channel.name);
     return { currentName: name, channelNames: allNames };
   });
 

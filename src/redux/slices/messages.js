@@ -29,19 +29,21 @@ export const fetchMessagesByChannelIdsAsync = createAsyncThunk(
 
 const messagesSlice = createSlice({
   name: 'messages',
-  initialState: { list: [] },
+  initialState: { messages: [] },
   reducers: {
-    addMessage: ({ list }, { payload: message }) => ({ list: [...list, message] }),
-    removeMessagesByChannelId: ({ list }, { payload: channelId }) => {
-      const filteredList = list.filter((message) => message.channelId !== channelId);
-
-      return { list: filteredList };
+    addMessage: ({ messages }, { payload: message }) => {
+      messages.push(message);
     },
   },
   extraReducers: {
-    [fetchMessagesByChannelIdsAsync.fulfilled]: ({ list }, { payload: messages }) => {
-      const diff = differenceWith(messages, list, isEqual);
-      list.push(...diff);
+    [fetchMessagesByChannelIdsAsync.fulfilled]: ({ messages }, { payload: newMessages }) => {
+      const diff = differenceWith(newMessages, messages, isEqual);
+      messages.push(...diff);
+    },
+    'channels/removeChannel': ({ messages }, { payload: channelId }) => {
+      const filteredMessages = messages.filter((message) => message.channelId !== channelId);
+
+      return { messages: filteredMessages };
     },
   },
 });

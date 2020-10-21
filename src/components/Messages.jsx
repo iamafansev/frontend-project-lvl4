@@ -11,7 +11,7 @@ const scrollMessagesContainerToBottom = () => animateScroll.scrollToBottom({
 const selectCurrentMessages = (state) => {
   const {
     channels: { currentChannelId },
-    messages: { list: messages },
+    messages: { messages },
   } = state;
 
   return messages

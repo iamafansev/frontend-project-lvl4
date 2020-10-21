@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import differenceWith from 'lodash/differenceWith';
@@ -47,37 +48,33 @@ export const fetchChannelsAsync = createAsyncThunk(
 
 const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { list: [], currentChannelId: null },
+  initialState: { channels: [], currentChannelId: null },
   reducers: {
-    setCurrentChannelId: (state, { payload: currentChannelId }) => (
-      { ...state, currentChannelId }
-    ),
-    addChannel: (state, { payload: channel }) => ({
-      ...state,
-      list: [...state.list, channel],
-    }),
-    renameChannel: (state, { payload: { id, name } }) => {
-      const newList = state.list.map((channel) => (
-        channel.id === id ? { ...channel, name } : channel
-      ));
-
-      return { ...state, list: newList };
+    setCurrentChannelId: (state, { payload: newCurrentChannelId }) => {
+      state.currentChannelId = newCurrentChannelId;
     },
-    removeChannel: ({ currentChannelId, list }, { payload: id }) => {
+    addChannel: ({ channels }, { payload: channel }) => {
+      channels.push(channel);
+    },
+    renameChannel: (state, { payload: { id, name: newName } }) => {
+      const currentChannel = state.channels.find((channel) => channel.id === id);
+      currentChannel.name = newName;
+    },
+    removeChannel: ({ currentChannelId, channels }, { payload: id }) => {
       const newCurrentChannelId = currentChannelId === id
-        ? first(list).id
+        ? first(channels).id
         : currentChannelId;
 
       return {
         currentChannelId: newCurrentChannelId,
-        list: list.filter((channel) => channel.id !== id),
+        channels: channels.filter((channel) => channel.id !== id),
       };
     },
   },
   extraReducers: {
-    [fetchChannelsAsync.fulfilled]: ({ list }, { payload: channels }) => {
-      const diff = differenceWith(channels, list, isEqual);
-      list.push(...diff);
+    [fetchChannelsAsync.fulfilled]: ({ channels }, { payload: newChannels }) => {
+      const diff = differenceWith(newChannels, channels, isEqual);
+      channels.push(...diff);
     },
   },
 });

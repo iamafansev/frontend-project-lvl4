@@ -19,8 +19,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const preloadedState = {
-  channels: { list: gon.channels, currentChannelId: gon.currentChannelId },
-  messages: { list: gon.messages },
+  channels: { channels: gon.channels, currentChannelId: gon.currentChannelId },
+  messages: { messages: gon.messages },
 };
 
 const store = initStore(preloadedState);

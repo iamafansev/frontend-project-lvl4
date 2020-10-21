@@ -10,7 +10,7 @@ const { actions: { openModal } } = modalSlice;
 const ChannelList = () => {
   const dispatch = useDispatch();
   const { channels } = useSelector((state) => ({
-    channels: state.channels.list,
+    channels: state.channels.channels,
   }));
 
   const handleClickOpenModal = (params) => () => dispatch(openModal(params));

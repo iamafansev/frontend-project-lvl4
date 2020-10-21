@@ -25,7 +25,7 @@ const getSсhema = (channelNames) => Yup.object().shape({
 
 const ModalAddChannel = () => {
   const dispatch = useDispatch();
-  const channelNames = useSelector((state) => state.channels.list.map(({ name }) => name));
+  const channelNames = useSelector((state) => state.channels.channels.map(({ name }) => name));
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 

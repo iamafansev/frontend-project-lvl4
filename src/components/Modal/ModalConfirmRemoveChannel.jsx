@@ -6,12 +6,10 @@ import Button from 'react-bootstrap/Button';
 
 import { ERRORS } from '../../constants';
 import { removeChannelAsync } from '../../redux/slices/channels';
-import messagesSlice from '../../redux/slices/messages';
 import modalSlice from '../../redux/slices/modal';
 import InvalidFeedback from '../InvalidFeedback';
 
 const { actions: { closeModal } } = modalSlice;
-const { actions: { removeMessagesByChannelId } } = messagesSlice;
 
 const ModalConfirmRemoveChannel = () => {
   const [submittingError, setSubmittingError] = useState(null);
@@ -23,7 +21,6 @@ const ModalConfirmRemoveChannel = () => {
   const handleConfirmDelete = () => (
     dispatch(removeChannelAsync(id))
       .then(unwrapResult)
-      .then(() => dispatch(removeMessagesByChannelId(id)))
       .then(handleClose)
       .catch(() => setSubmittingError(ERRORS.network))
   );
