@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -13,8 +13,6 @@ import initStore from './redux/initStore';
 import channelsSlice, { fetchChannelsAsync } from './redux/slices/channels';
 import messagesSlice, { fetchMessagesByChannelIdsAsync } from './redux/slices/messages';
 import '../assets/application.scss';
-
-export const UserContext = createContext();
 
 const init = () => {
   if (process.env.NODE_ENV !== 'production') {
