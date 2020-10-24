@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+import React, {
+  useEffect, useMemo, useRef, memo,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
@@ -24,6 +26,7 @@ const getSсhema = (channelNames) => Yup.object().shape({
 });
 
 const ModalRenameChannel = () => {
+  const inputRef = useRef();
   const dispatch = useDispatch();
   const id = useSelector(({ modal: { data } }) => data.channelId);
 
@@ -34,6 +37,15 @@ const ModalRenameChannel = () => {
   });
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
+
+  const selectInputText = () => {
+    inputRef.current.focus();
+    inputRef.current.setSelectionRange(0, currentName.length);
+  };
+
+  useEffect(() => {
+    selectInputText();
+  }, []);
 
   const handleClose = () => dispatch(closeModal());
 
@@ -70,6 +82,7 @@ const ModalRenameChannel = () => {
                   className="mb-2"
                   disabled={isSubmitting}
                   isInvalid={touched.name && errors.name}
+                  forwardRef={inputRef}
                 />
                 {!!errors.submittingError && <InvalidFeedback message={errors.submittingError} />}
                 <div className="d-flex justify-content-end">
@@ -93,4 +106,4 @@ const ModalRenameChannel = () => {
   );
 };
 
-export default ModalRenameChannel;
+export default memo(ModalRenameChannel);

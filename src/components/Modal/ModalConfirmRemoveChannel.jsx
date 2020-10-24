@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Modal from 'react-bootstrap/Modal';
@@ -45,4 +45,4 @@ const ModalConfirmRemoveChannel = () => {
   );
 };
 
-export default ModalConfirmRemoveChannel;
+export default memo(ModalConfirmRemoveChannel);

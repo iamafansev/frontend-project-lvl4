@@ -43,7 +43,12 @@ const MessageForm = () => {
   return (
     <Formik initialValues={{ body: '' }} onSubmit={handleSubmit} validationSchema={schema}>
       {({
-        touched, isValid, isSubmitting, dirty, errors: { body: bodyError, submittingError },
+        isValid,
+        touched,
+        isSubmitting,
+        dirty,
+        errors: { body: bodyError, submittingError },
+        values: { body: bodyValue },
       }) => (
         <Form autoComplete="off">
           <FormBootstrap.Group>
@@ -57,7 +62,12 @@ const MessageForm = () => {
                 className="mr-2"
               />
               <InputGroup.Append>
-                <Button type="submit" disabled={!isValid || isSubmitting || !dirty}>Submit</Button>
+                <Button
+                  type="submit"
+                  disabled={(isSubmitting || !isValid || !dirty) && !bodyValue}
+                >
+                  Submit
+                </Button>
               </InputGroup.Append>
             </InputGroup>
             {touched.body && bodyError && <InvalidFeedback message={bodyError} />}

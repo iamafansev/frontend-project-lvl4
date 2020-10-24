@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
@@ -87,4 +87,4 @@ const ModalAddChannel = () => {
   );
 };
 
-export default ModalAddChannel;
+export default memo(ModalAddChannel);
