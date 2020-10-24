@@ -37,15 +37,16 @@ const ModalRenameChannel = () => {
 
   const handleClose = () => dispatch(closeModal());
 
-  const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(renameChannelAsync({ id, name: name.trimRight() }))
-      .then(unwrapResult)
-      .then(() => {
-        resetForm();
-        handleClose();
-      })
-      .catch(() => setErrors({ submittingError: ERRORS.network }))
-  );
+  const handleSubmit = async ({ name }, { resetForm, setErrors }) => {
+    try {
+      const resultAction = await dispatch(renameChannelAsync({ id, name: name.trimRight() }));
+      unwrapResult(resultAction);
+      resetForm();
+      handleClose();
+    } catch (error) {
+      setErrors({ submittingError: ERRORS.network });
+    }
+  };
 
   return (
     <Modal show onHide={handleClose} restoreFocus={false}>

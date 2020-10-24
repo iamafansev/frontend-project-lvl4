@@ -31,15 +31,16 @@ const ModalAddChannel = () => {
 
   const handleClose = () => dispatch(closeModal());
 
-  const handleSubmit = ({ name }, { resetForm, setErrors }) => (
-    dispatch(createChannelAsync(name.trimRight()))
-      .then(unwrapResult)
-      .then(() => {
-        resetForm();
-        handleClose();
-      })
-      .catch(() => setErrors({ submittingError: ERRORS.network }))
-  );
+  const handleSubmit = async ({ name }, { resetForm, setErrors }) => {
+    try {
+      const resultAcion = await dispatch(createChannelAsync(name.trimRight()));
+      unwrapResult(resultAcion);
+      resetForm();
+      handleClose();
+    } catch (error) {
+      setErrors({ submittingError: ERRORS.network });
+    }
+  };
 
   return (
     <Modal show onHide={handleClose} restoreFocus={false} animation={false}>

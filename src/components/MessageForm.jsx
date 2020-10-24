@@ -26,13 +26,19 @@ const MessageForm = () => {
 
   const setFocusOnBody = () => bodyRef.current.focus();
 
-  const handleSubmit = ({ body }, { resetForm, setErrors }) => (
-    dispatch(createMessageAsync({ channelId, nickname, body: body.trimRight() }))
-      .then(unwrapResult)
-      .then(resetForm)
-      .then(setFocusOnBody)
-      .catch(() => setErrors({ submittingError: ERRORS.network }))
-  );
+  const handleSubmit = async ({ body }, { resetForm, setErrors }) => {
+    try {
+      const resultAction = await dispatch(
+        createMessageAsync({ channelId, nickname, body: body.trimRight() }),
+      );
+
+      unwrapResult(resultAction);
+      resetForm();
+      setFocusOnBody();
+    } catch (err) {
+      setErrors({ submittingError: ERRORS.network });
+    }
+  };
 
   return (
     <Formik initialValues={{ body: '' }} onSubmit={handleSubmit} validationSchema={schema}>

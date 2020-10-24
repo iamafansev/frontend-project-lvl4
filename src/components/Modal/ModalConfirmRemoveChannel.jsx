@@ -18,12 +18,15 @@ const ModalConfirmRemoveChannel = () => {
 
   const handleClose = () => dispatch(closeModal());
 
-  const handleConfirmDelete = () => (
-    dispatch(removeChannelAsync(id))
-      .then(unwrapResult)
-      .then(handleClose)
-      .catch(() => setSubmittingError(ERRORS.network))
-  );
+  const handleConfirmDelete = async () => {
+    try {
+      const resultAction = await dispatch(removeChannelAsync(id));
+      unwrapResult(resultAction);
+      handleClose();
+    } catch (error) {
+      setSubmittingError(ERRORS.network);
+    }
+  };
 
   return (
     <Modal show onHide={handleClose} restoreFocus={false}>

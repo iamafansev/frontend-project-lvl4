@@ -37,12 +37,19 @@ const init = () => {
 
   const socket = io();
 
-  const fetchChannelsAndMessages = () => dispatch(fetchChannelsAsync())
-    .then(unwrapResult)
-    .then((channels) => {
+  const fetchChannelsAndMessages = async () => {
+    try {
+      const resultChannelsAction = await dispatch(fetchChannelsAsync());
+
+      const channels = unwrapResult(resultChannelsAction);
       const channelIds = channels.map(({ id }) => id);
-      dispatch(fetchMessagesByChannelIdsAsync(channelIds));
-    });
+
+      const resultMessagesAction = await dispatch(fetchMessagesByChannelIdsAsync(channelIds));
+      unwrapResult(resultMessagesAction);
+    } catch (error) {
+      fetchChannelsAndMessages();
+    }
+  };
 
   socket.on('reconnect', fetchChannelsAndMessages);
   socket.on('newChannel', ({ data: { attributes } }) => dispatch(addChannel(attributes)));
