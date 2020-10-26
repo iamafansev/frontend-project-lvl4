@@ -5,10 +5,13 @@ import 'regenerator-runtime/runtime';
 
 import runApp from './init';
 
-if (process.env.NODE_ENV !== 'production') {
+const isProd = process.env.NODE_ENV === 'production';
+
+if (!isProd) {
   localStorage.debug = 'chat:*';
 }
 
-const socket = io();
+const socketUrl = isProd ? 'https://blooming-wildwood-78196.herokuapp.com/' : 'http://localhost:5000/';
+const socket = io(socketUrl);
 
 runApp(gon, socket);
