@@ -32,7 +32,7 @@ const TextField = ({
         isInvalid={isInvalid}
         className={className}
       />
-      {meta.error && (
+      {meta.touched && meta.error && (
         <Form.Control.Feedback type="invalid">
           {meta.error}
         </Form.Control.Feedback>

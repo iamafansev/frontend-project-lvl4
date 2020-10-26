@@ -47,7 +47,7 @@ const init = () => {
       const resultMessagesAction = await dispatch(fetchMessagesByChannelIdsAsync(channelIds));
       unwrapResult(resultMessagesAction);
     } catch (error) {
-      fetchChannelsAndMessages();
+      console.log(error);
     }
   };
 

@@ -38,14 +38,16 @@ const ModalRenameChannel = () => {
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 
-  const selectInputText = () => {
+  const setFocusOnField = () => {
     inputRef.current.focus();
-    inputRef.current.setSelectionRange(0, currentName.length);
   };
 
-  useEffect(() => {
-    selectInputText();
-  }, []);
+  const selectInputText = () => {
+    setFocusOnField();
+    inputRef.current.select();
+  };
+
+  useEffect(selectInputText, []);
 
   const handleClose = () => dispatch(closeModal());
 
@@ -56,6 +58,7 @@ const ModalRenameChannel = () => {
       resetForm();
       handleClose();
     } catch (error) {
+      setTimeout(setFocusOnField);
       setErrors({ submittingError: ERRORS.network });
     }
   };

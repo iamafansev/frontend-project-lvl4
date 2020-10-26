@@ -1,7 +1,9 @@
+/* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import differenceWith from 'lodash/differenceWith';
 import isEqual from 'lodash/isEqual';
+import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
@@ -40,10 +42,8 @@ const messagesSlice = createSlice({
       const diff = differenceWith(newMessages, messages, isEqual);
       messages.push(...diff);
     },
-    'channels/removeChannel': ({ messages }, { payload: channelId }) => {
-      const filteredMessages = messages.filter((message) => message.channelId !== channelId);
-
-      return { messages: filteredMessages };
+    'channels/removeChannel': (state, { payload: channelId }) => {
+      remove(state.messages, (message) => message.channelId === channelId);
     },
   },
 });

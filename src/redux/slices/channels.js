@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import differenceWith from 'lodash/differenceWith';
 import isEqual from 'lodash/isEqual';
 import first from 'lodash/first';
+import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
@@ -60,15 +61,14 @@ const channelsSlice = createSlice({
       const currentChannel = state.channels.find((channel) => channel.id === id);
       currentChannel.name = newName;
     },
-    removeChannel: ({ currentChannelId, channels }, { payload: id }) => {
+    removeChannel: (state, { payload: id }) => {
+      const { currentChannelId, channels } = state;
       const newCurrentChannelId = currentChannelId === id
         ? first(channels).id
         : currentChannelId;
 
-      return {
-        currentChannelId: newCurrentChannelId,
-        channels: channels.filter((channel) => channel.id !== id),
-      };
+      state.currentChannelId = newCurrentChannelId;
+      remove(state.channels, (channel) => channel.id === id);
     },
   },
   extraReducers: {

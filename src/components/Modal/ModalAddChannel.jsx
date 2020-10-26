@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
@@ -24,10 +24,15 @@ const getSсhema = (channelNames) => Yup.object().shape({
 });
 
 const ModalAddChannel = () => {
+  const inputRef = useRef();
   const dispatch = useDispatch();
   const channelNames = useSelector((state) => state.channels.channels.map(({ name }) => name));
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
+
+  const setFocusOnField = () => {
+    inputRef.current.focus();
+  };
 
   const handleClose = () => dispatch(closeModal());
 
@@ -38,6 +43,7 @@ const ModalAddChannel = () => {
       resetForm();
       handleClose();
     } catch (error) {
+      setTimeout(setFocusOnField);
       setErrors({ submittingError: ERRORS.network });
     }
   };
@@ -64,6 +70,7 @@ const ModalAddChannel = () => {
                   className="mb-2"
                   disabled={isSubmitting}
                   isInvalid={touched.name && errors.name}
+                  forwardRef={inputRef}
                 />
                 {!!errors.submittingError && <InvalidFeedback message={errors.submittingError} />}
                 <div className="d-flex justify-content-end">

@@ -1,4 +1,6 @@
-import React, { useContext, useRef } from 'react';
+import React, {
+  useEffect, useContext, useRef, useCallback,
+} from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
@@ -24,9 +26,11 @@ const MessageForm = () => {
   const { nickname } = useContext(UserContext);
   const bodyRef = useRef();
 
-  const setFocusOnBody = () => bodyRef.current.focus();
+  const setFocusOnBody = useCallback(() => bodyRef.current.focus(), []);
 
-  const handleSubmit = async ({ body }, { resetForm, setErrors }) => {
+  useEffect(setFocusOnBody, [channelId]);
+
+  const handleSubmit = useCallback(async ({ body }, { resetForm, setErrors }) => {
     try {
       const resultAction = await dispatch(
         createMessageAsync({ channelId, nickname, body: body.trimRight() }),
@@ -36,9 +40,10 @@ const MessageForm = () => {
       resetForm();
       setFocusOnBody();
     } catch (err) {
+      setTimeout(setFocusOnBody);
       setErrors({ submittingError: ERRORS.network });
     }
-  };
+  }, [channelId, nickname]);
 
   return (
     <Formik initialValues={{ body: '' }} onSubmit={handleSubmit} validationSchema={schema}>
