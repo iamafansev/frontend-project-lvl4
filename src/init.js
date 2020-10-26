@@ -1,9 +1,8 @@
-import { unwrapResult } from '@reduxjs/toolkit';
-
 import renderApp from './renderApp';
 import initStore from './redux/initStore';
-import channelsSlice, { fetchChannelsAsync } from './redux/slices/channels';
-import messagesSlice, { fetchMessagesByChannelIdsAsync } from './redux/slices/messages';
+import { fetchChannelsWithMessagesAsync } from './redux/actions';
+import channelsSlice from './redux/slices/channels';
+import messagesSlice from './redux/slices/messages';
 import '../assets/application.scss';
 
 const init = (data, socket) => {
@@ -24,21 +23,7 @@ const init = (data, socket) => {
     },
   } = channelsSlice;
 
-  const fetchChannelsAndMessages = async () => {
-    try {
-      const resultChannelsAction = await dispatch(fetchChannelsAsync());
-
-      const channels = unwrapResult(resultChannelsAction);
-      const channelIds = channels.map(({ id }) => id);
-
-      const resultMessagesAction = await dispatch(fetchMessagesByChannelIdsAsync(channelIds));
-      unwrapResult(resultMessagesAction);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  socket.on('reconnect', fetchChannelsAndMessages);
+  socket.on('reconnect', () => dispatch(fetchChannelsWithMessagesAsync()));
   socket.on('newChannel', ({ data: { attributes } }) => dispatch(addChannel(attributes)));
   socket.on('renameChannel', ({ data: { attributes } }) => dispatch(renameChannel(attributes)));
   socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));

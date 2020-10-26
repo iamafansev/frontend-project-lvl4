@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import differenceWith from 'lodash/differenceWith';
-import isEqual from 'lodash/isEqual';
 import first from 'lodash/first';
 import remove from 'lodash/remove';
 
@@ -37,16 +35,6 @@ export const renameChannelAsync = createAsyncThunk(
   },
 );
 
-export const fetchChannelsAsync = createAsyncThunk(
-  'messages/fetchChannels',
-  async () => {
-    const route = routes.channelsPath();
-    const { data: { data } } = await axios.get(route);
-
-    return data.map(({ attributes }) => attributes);
-  },
-);
-
 const channelsSlice = createSlice({
   name: 'channels',
   initialState: { channels: [], currentChannelId: null },
@@ -72,9 +60,8 @@ const channelsSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchChannelsAsync.fulfilled]: ({ channels }, { payload: newChannels }) => {
-      const diff = differenceWith(newChannels, channels, isEqual);
-      channels.push(...diff);
+    'channels/fetchChannelsWithMessages': (state, { payload: { channels: newChannels } }) => {
+      state.channels = newChannels;
     },
   },
 });

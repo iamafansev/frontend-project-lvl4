@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import differenceWith from 'lodash/differenceWith';
-import isEqual from 'lodash/isEqual';
 import remove from 'lodash/remove';
 
 import routes from '../../routes';
@@ -17,18 +15,6 @@ export const createMessageAsync = createAsyncThunk(
   },
 );
 
-export const fetchMessagesByChannelIdsAsync = createAsyncThunk(
-  'messages/fetchMessagesByChannelIds',
-  (channelIds) => {
-    const promises = channelIds.map((id) => {
-      const route = routes.channelMessagesPath(id);
-      return axios.get(route).then(({ data: { data } }) => data);
-    });
-
-    return Promise.all(promises).then((data) => data.flat().map(({ attributes }) => attributes));
-  },
-);
-
 const messagesSlice = createSlice({
   name: 'messages',
   initialState: { messages: [] },
@@ -38,12 +24,11 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchMessagesByChannelIdsAsync.fulfilled]: ({ messages }, { payload: newMessages }) => {
-      const diff = differenceWith(newMessages, messages, isEqual);
-      messages.push(...diff);
-    },
     'channels/removeChannel': (state, { payload: channelId }) => {
       remove(state.messages, (message) => message.channelId === channelId);
+    },
+    'channels/fetchChannelsWithMessages': (state, { payload: { messages: newMessages } }) => {
+      state.messages = newMessages;
     },
   },
 });
