@@ -1,30 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import io from 'socket.io-client';
-import gon from 'gon';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 
-import App from './components/App';
-import { UserProvider } from './components/UserContext';
+import renderApp from './renderApp';
 import initStore from './redux/initStore';
 import channelsSlice, { fetchChannelsAsync } from './redux/slices/channels';
 import messagesSlice, { fetchMessagesByChannelIdsAsync } from './redux/slices/messages';
 import '../assets/application.scss';
 
-const init = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    localStorage.debug = 'chat:*';
-  }
-
+const init = (data, socket) => {
   const preloadedState = {
-    channels: { channels: gon.channels, currentChannelId: gon.currentChannelId },
-    messages: { messages: gon.messages },
+    channels: { channels: data.channels, currentChannelId: data.currentChannelId },
+    messages: { messages: data.messages },
   };
 
   const store = initStore(preloadedState);
+
   const { dispatch } = store;
   const { actions: { addMessage } } = messagesSlice;
   const {
@@ -34,8 +23,6 @@ const init = () => {
       removeChannel,
     },
   } = channelsSlice;
-
-  const socket = io();
 
   const fetchChannelsAndMessages = async () => {
     try {
@@ -57,14 +44,7 @@ const init = () => {
   socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));
   socket.on('newMessage', ({ data: { attributes } }) => dispatch(addMessage(attributes)));
 
-  ReactDOM.render(
-    <Provider store={store}>
-      <UserProvider>
-        <App />
-      </UserProvider>
-    </Provider>,
-    document.getElementById('chat'),
-  );
+  renderApp(store);
 };
 
 export default init;
