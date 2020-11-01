@@ -9,11 +9,9 @@ import Button from 'react-bootstrap/Button';
 
 import { ERRORS, formFieldsError } from '../../constants';
 import { createChannelAsync } from '../../redux/slices/channels';
-import modalSlice from '../../redux/slices/modal';
+import { closeModal } from '../../redux/slices/modal';
 import Field from '../Field';
 import InvalidFeedback from '../InvalidFeedback';
-
-const { actions: { closeModal } } = modalSlice;
 
 const getSсhema = (channelNames) => Yup.object().shape({
   name: Yup.string()

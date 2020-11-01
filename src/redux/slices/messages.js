@@ -5,7 +5,7 @@ import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
-export const fetchMessagesAsync = createAsyncThunk(
+const fetchMessagesAsync = createAsyncThunk(
   'channels/fetchMessages',
   async () => {
     const route = routes.messagesPath();
@@ -15,7 +15,7 @@ export const fetchMessagesAsync = createAsyncThunk(
   },
 );
 
-export const createMessageAsync = createAsyncThunk(
+const createMessageAsync = createAsyncThunk(
   'messages/createMessage',
   async ({ channelId, nickname, body }) => {
     const route = routes.channelMessagesPath(channelId);
@@ -46,4 +46,7 @@ const messagesSlice = createSlice({
   },
 });
 
-export default messagesSlice;
+export const { addMessage } = messagesSlice.actions;
+export { fetchMessagesAsync, createMessageAsync };
+
+export default messagesSlice.reducer;

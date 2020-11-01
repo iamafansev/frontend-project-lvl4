@@ -2,10 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 
-import modalSlice from '../redux/slices/modal';
+import { openModal } from '../redux/slices/modal';
 import ChannelItem from './ChannelItem';
-
-const { actions: { openModal } } = modalSlice;
 
 const ChannelList = () => {
   const dispatch = useDispatch();

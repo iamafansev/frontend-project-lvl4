@@ -1,18 +1,15 @@
 import renderApp from './renderApp';
-import channelsSlice, { fetchChannelsAsync } from './redux/slices/channels';
-import messagesSlice, { fetchMessagesAsync } from './redux/slices/messages';
+import {
+  fetchChannelsAsync,
+  addChannel,
+  renameChannel,
+  removeChannel,
+} from './redux/slices/channels';
+import { addMessage, fetchMessagesAsync } from './redux/slices/messages';
 import '../assets/application.scss';
 
 const init = (store, socket, rootElement) => {
   const { dispatch } = store;
-  const { actions: { addMessage } } = messagesSlice;
-  const {
-    actions: {
-      addChannel,
-      renameChannel,
-      removeChannel,
-    },
-  } = channelsSlice;
 
   socket.on('reconnect', () => {
     dispatch(fetchChannelsAsync());

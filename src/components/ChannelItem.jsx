@@ -5,11 +5,8 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 
-import channelsSlice from '../redux/slices/channels';
-import modalSlice from '../redux/slices/modal';
-
-const { actions: { setCurrentChannelId } } = channelsSlice;
-const { actions: { openModal } } = modalSlice;
+import { setCurrentChannelId } from '../redux/slices/channels';
+import { openModal } from '../redux/slices/modal';
 
 const ChannelItem = ({ item: { id, name, removable } }) => {
   const dispatch = useDispatch();

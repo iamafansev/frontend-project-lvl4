@@ -6,10 +6,8 @@ import Button from 'react-bootstrap/Button';
 
 import { ERRORS } from '../../constants';
 import { removeChannelAsync } from '../../redux/slices/channels';
-import modalSlice from '../../redux/slices/modal';
+import { closeModal } from '../../redux/slices/modal';
 import InvalidFeedback from '../InvalidFeedback';
-
-const { actions: { closeModal } } = modalSlice;
 
 const ModalConfirmRemoveChannel = () => {
   const [submittingError, setSubmittingError] = useState(null);
