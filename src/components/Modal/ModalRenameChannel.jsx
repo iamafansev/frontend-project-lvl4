@@ -72,6 +72,7 @@ const ModalRenameChannel = () => {
         <Formik
           initialValues={{ name: currentName }}
           validationSchema={schema}
+          validateOnBlur={false}
           onSubmit={handleSubmit}
         >
           {({

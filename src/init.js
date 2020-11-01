@@ -1,18 +1,10 @@
 import renderApp from './renderApp';
-import initStore from './redux/initStore';
 import { fetchChannelsWithMessagesAsync } from './redux/actions';
 import channelsSlice from './redux/slices/channels';
 import messagesSlice from './redux/slices/messages';
 import '../assets/application.scss';
 
-const init = (data, socket) => {
-  const preloadedState = {
-    channels: { channels: data.channels, currentChannelId: data.currentChannelId },
-    messages: { messages: data.messages },
-  };
-
-  const store = initStore(preloadedState);
-
+const init = (store, socket, rootElement) => {
   const { dispatch } = store;
   const { actions: { addMessage } } = messagesSlice;
   const {
@@ -29,7 +21,7 @@ const init = (data, socket) => {
   socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));
   socket.on('newMessage', ({ data: { attributes } }) => dispatch(addMessage(attributes)));
 
-  renderApp(store);
+  renderApp(store, rootElement);
 };
 
 export default init;

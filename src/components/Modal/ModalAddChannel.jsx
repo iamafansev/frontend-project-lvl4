@@ -57,6 +57,7 @@ const ModalAddChannel = () => {
         <Formik
           initialValues={{ name: '' }}
           validationSchema={schema}
+          validateOnBlur={false}
           onSubmit={handleSubmit}
         >
           {({

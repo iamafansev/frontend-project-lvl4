@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import { UserProvider } from './components/UserContext';
 import App from './components/App';
 
-const renderApp = (store) => {
+const renderApp = (store, element) => {
   ReactDOM.render(
     <Provider store={store}>
       <UserProvider>
         <App />
       </UserProvider>
     </Provider>,
-    document.getElementById('chat'),
+    element,
   );
 };
 

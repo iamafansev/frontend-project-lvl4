@@ -3,15 +3,22 @@ import io from 'socket.io-client';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+import initStore from './redux/initStore';
 import runApp from './init';
 
-const isProd = process.env.NODE_ENV === 'production';
-
-if (!isProd) {
+if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-const socketUrl = isProd ? 'https://blooming-wildwood-78196.herokuapp.com/' : 'http://localhost:5000/';
-const socket = io(socketUrl);
+const preloadedState = {
+  channels: { channels: gon.channels, currentChannelId: gon.currentChannelId },
+  messages: { messages: gon.messages },
+};
 
-runApp(gon, socket);
+const store = initStore(preloadedState);
+
+const socket = io(window.location.origin);
+
+const rootElement = document.getElementById('chat');
+
+runApp(store, socket, rootElement);
