@@ -1,7 +1,6 @@
 import renderApp from './renderApp';
-import { fetchChannelsWithMessagesAsync } from './redux/actions';
-import channelsSlice from './redux/slices/channels';
-import messagesSlice from './redux/slices/messages';
+import channelsSlice, { fetchChannelsAsync } from './redux/slices/channels';
+import messagesSlice, { fetchMessagesAsync } from './redux/slices/messages';
 import '../assets/application.scss';
 
 const init = (store, socket, rootElement) => {
@@ -15,7 +14,10 @@ const init = (store, socket, rootElement) => {
     },
   } = channelsSlice;
 
-  socket.on('reconnect', () => dispatch(fetchChannelsWithMessagesAsync()));
+  socket.on('reconnect', () => {
+    dispatch(fetchChannelsAsync());
+    dispatch(fetchMessagesAsync());
+  });
   socket.on('newChannel', ({ data: { attributes } }) => dispatch(addChannel(attributes)));
   socket.on('renameChannel', ({ data: { attributes } }) => dispatch(renameChannel(attributes)));
   socket.on('removeChannel', ({ data: { id } }) => dispatch(removeChannel(id)));

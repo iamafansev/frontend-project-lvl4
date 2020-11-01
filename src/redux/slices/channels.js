@@ -6,6 +6,16 @@ import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
+export const fetchChannelsAsync = createAsyncThunk(
+  'channels/fetchChannels',
+  async () => {
+    const route = routes.channelsPath();
+    const { data: { data } } = await axios.get(route);
+
+    return data.map(({ attributes }) => attributes);
+  },
+);
+
 export const createChannelAsync = createAsyncThunk(
   'channels/createChannel',
   async (name) => {
@@ -60,7 +70,7 @@ const channelsSlice = createSlice({
     },
   },
   extraReducers: {
-    'channels/fetchChannelsWithMessages': (state, { payload: { channels: newChannels } }) => {
+    [fetchChannelsAsync.fulfilled]: (state, { payload: newChannels }) => {
       state.channels = newChannels;
     },
   },

@@ -36,25 +36,6 @@ export default (app, io, defaultState = {}) => {
     .get('/', (_req, reply) => {
       reply.view('index.pug', { gon: state });
     })
-    .get('/api/v1/channels-with-messages', (_req, reply) => {
-      const channelsResources = state.channels.map((c) => ({
-        type: 'channels',
-        id: c.id,
-        attributes: c,
-      }));
-
-      const messagesResources = state.messages.map((m) => ({
-        type: 'messages',
-        id: m.id,
-        attributes: m,
-      }));
-
-      const response = {
-        data: { channels: channelsResources, messages: messagesResources },
-      };
-
-      reply.send(response);
-    })
     .get('/api/v1/channels', (_req, reply) => {
       const resources = state.channels.map((c) => ({
         type: 'channels',
@@ -148,5 +129,17 @@ export default (app, io, defaultState = {}) => {
       };
       reply.send(data);
       io.emit('newMessage', data);
+    })
+    .get('/api/v1/messages', (req, reply) => {
+      const { messages } = state;
+      const resources = messages.map((m) => ({
+        type: 'messages',
+        id: m.id,
+        attributes: m,
+      }));
+      const response = {
+        data: resources,
+      };
+      reply.send(response);
     });
 };

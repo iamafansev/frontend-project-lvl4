@@ -5,6 +5,16 @@ import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
+export const fetchMessagesAsync = createAsyncThunk(
+  'channels/fetchMessages',
+  async () => {
+    const route = routes.messagesPath();
+    const { data: { data } } = await axios.get(route);
+
+    return data.map(({ attributes }) => attributes);
+  },
+);
+
 export const createMessageAsync = createAsyncThunk(
   'messages/createMessage',
   async ({ channelId, nickname, body }) => {
@@ -24,6 +34,9 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
+    [fetchMessagesAsync.fulfilled]: (state, { payload: newMessages }) => {
+      state.messages = newMessages;
+    },
     'channels/removeChannel': (state, { payload: channelId }) => {
       remove(state.messages, (message) => message.channelId === channelId);
     },

@@ -4,7 +4,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import initStore from './redux/initStore';
-import runApp from './init';
+import initApp from './init';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -21,4 +21,4 @@ const socket = io(window.location.origin);
 
 const rootElement = document.getElementById('chat');
 
-runApp(store, socket, rootElement);
+initApp(store, socket, rootElement);
