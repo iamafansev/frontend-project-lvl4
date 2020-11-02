@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, memo } from 'react';
+import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
+
+import { getCurrentChannelId } from '../redux/slices/channels';
+import { getMessagesByChannelId } from '../redux/slices/messages';
 
 const MESSAGES_CONTAINER_ID = 'messagesContainer';
 const scrollMessagesContainerToBottom = () => animateScroll.scrollToBottom({
@@ -8,19 +11,7 @@ const scrollMessagesContainerToBottom = () => animateScroll.scrollToBottom({
   containerId: MESSAGES_CONTAINER_ID,
 });
 
-const selectCurrentMessages = (state) => {
-  const {
-    channels: { currentChannelId },
-    messages: { messages },
-  } = state;
-
-  return messages
-    .filter(({ channelId }) => channelId === currentChannelId);
-};
-
-const Messages = () => {
-  const currentMessages = useSelector(selectCurrentMessages);
-
+const Messages = ({ currentMessages }) => {
   useEffect(() => {
     scrollMessagesContainerToBottom();
   }, [currentMessages]);
@@ -38,4 +29,7 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default connect((state) => {
+  const currentChannelId = getCurrentChannelId(state);
+  return { currentMessages: getMessagesByChannelId(currentChannelId)(state) };
+})(memo(Messages));

@@ -1,17 +1,13 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo, useCallback } from 'react';
+import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 
 import { openModal } from '../redux/slices/modal';
 import ChannelItem from './ChannelItem';
+import { getChannels } from '../redux/slices/channels';
 
-const ChannelList = () => {
-  const dispatch = useDispatch();
-  const { channels } = useSelector((state) => ({
-    channels: state.channels.channels,
-  }));
-
-  const handleClickOpenModal = (params) => () => dispatch(openModal(params));
+const ChannelList = ({ channels, dispatch }) => {
+  const handleClickOpenModal = useCallback((params) => () => dispatch(openModal(params)), []);
 
   return (
     <>
@@ -32,4 +28,6 @@ const ChannelList = () => {
   );
 };
 
-export default ChannelList;
+export default connect((state) => ({
+  channels: getChannels(state),
+}))(memo(ChannelList));

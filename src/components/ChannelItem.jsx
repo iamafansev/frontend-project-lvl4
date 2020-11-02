@@ -1,26 +1,23 @@
-import React, { memo } from 'react';
+import React, { useMemo, useCallback, memo } from 'react';
 import cn from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 
-import { setCurrentChannelId } from '../redux/slices/channels';
+import { setCurrentChannelId, getCurrentChannelId } from '../redux/slices/channels';
 import { openModal } from '../redux/slices/modal';
 
-const ChannelItem = ({ item: { id, name, removable } }) => {
-  const dispatch = useDispatch();
-  const { currentChannelId } = useSelector((state) => ({
-    currentChannelId: state.channels.currentChannelId,
-  }));
-  const isCurrentChannel = id === currentChannelId;
+const ChannelItem = ({ dispatch, currentChannelId, item: { id, name, removable } }) => {
+  const isCurrentChannel = useMemo(() => id === currentChannelId, [id, currentChannelId]);
 
   const handleClickOpenModal = (type) => () => (
     dispatch(openModal({ type, data: { channelId: id } }))
   );
-  const handleClickChannel = () => dispatch(setCurrentChannelId(id));
 
-  const ChannelItemButton = ({ isDense = false }) => (
+  const handleClickChannel = useCallback(() => dispatch(setCurrentChannelId(id)), [id]);
+
+  const ChannelItemButton = useCallback(({ isDense = false }) => (
     <Button
       type="button"
       block
@@ -30,9 +27,9 @@ const ChannelItem = ({ item: { id, name, removable } }) => {
     >
       {name}
     </Button>
-  );
+  ), [name, isCurrentChannel, handleClickChannel]);
 
-  const ItemButtonWithDropdown = () => (
+  const ItemButtonWithDropdown = useCallback(() => (
     <Dropdown as={ButtonGroup} className="d-flex mb-2">
       <ChannelItemButton isDense />
       <Dropdown.Toggle split variant={isCurrentChannel ? 'primary' : 'light'} />
@@ -49,7 +46,7 @@ const ChannelItem = ({ item: { id, name, removable } }) => {
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
-  );
+  ), [handleClickOpenModal, handleClickOpenModal]);
 
   return (
     <li className="nav-item">
@@ -62,4 +59,6 @@ const ChannelItem = ({ item: { id, name, removable } }) => {
   );
 };
 
-export default memo(ChannelItem);
+export default connect((state) => ({
+  currentChannelId: getCurrentChannelId(state),
+}))(memo(ChannelItem));

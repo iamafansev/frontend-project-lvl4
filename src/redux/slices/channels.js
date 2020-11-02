@@ -76,6 +76,7 @@ const channelsSlice = createSlice({
   },
 });
 
+export const getChannels = ({ channels: { channels } }) => channels;
 export const getCurrentChannelId = ({ channels: { currentChannelId } }) => currentChannelId;
 export const getChannelNames = ({ channels: { channels } }) => channels.map(({ name }) => name);
 export const getCurrentChannelName = (id) => ({ channels: { channels } }) => {

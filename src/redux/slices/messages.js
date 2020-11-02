@@ -46,6 +46,9 @@ const messagesSlice = createSlice({
   },
 });
 
+export const getMessagesByChannelId = (channelId) => ({ messages: { messages } }) => messages
+  .filter((m) => m.channelId === channelId);
+
 export const { addMessage } = messagesSlice.actions;
 export { fetchMessagesAsync, createMessageAsync };
 
