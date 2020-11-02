@@ -6,7 +6,7 @@ import remove from 'lodash/remove';
 
 import routes from '../../routes';
 
-const fetchChannelsAsync = createAsyncThunk(
+export const fetchChannelsAsync = createAsyncThunk(
   'channels/fetchChannels',
   async () => {
     const route = routes.channelsPath();
@@ -16,7 +16,7 @@ const fetchChannelsAsync = createAsyncThunk(
   },
 );
 
-const createChannelAsync = createAsyncThunk(
+export const createChannelAsync = createAsyncThunk(
   'channels/createChannel',
   async (name) => {
     const route = routes.channelsPath();
@@ -26,7 +26,7 @@ const createChannelAsync = createAsyncThunk(
   },
 );
 
-const removeChannelAsync = createAsyncThunk(
+export const removeChannelAsync = createAsyncThunk(
   'channels/removeChannel',
   async (id) => {
     const route = routes.channelPath(id);
@@ -35,7 +35,7 @@ const removeChannelAsync = createAsyncThunk(
   },
 );
 
-const renameChannelAsync = createAsyncThunk(
+export const renameChannelAsync = createAsyncThunk(
   'channels/renameChannel',
   async ({ id, name }) => {
     const route = routes.channelPath(id);
@@ -76,13 +76,15 @@ const channelsSlice = createSlice({
   },
 });
 
+export const getCurrentChannelId = ({ channels: { currentChannelId } }) => currentChannelId;
+export const getChannelNames = ({ channels: { channels } }) => channels.map(({ name }) => name);
+export const getCurrentChannelName = (id) => ({ channels: { channels } }) => {
+  const { name } = channels.find((channel) => channel.id === id);
+  return name;
+};
+
 export const {
   setCurrentChannelId, addChannel, renameChannel, removeChannel,
 } = channelsSlice.actions;
-export {
-  fetchChannelsAsync,
-  createChannelAsync,
-  removeChannelAsync,
-  renameChannelAsync,
-};
+
 export default channelsSlice.reducer;

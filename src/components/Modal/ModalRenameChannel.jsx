@@ -1,7 +1,7 @@
 import React, {
-  useEffect, useMemo, useRef, memo,
+  useEffect, useMemo, useRef, memo, useCallback,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
 import FormBootstrap from 'react-bootstrap/Form';
@@ -10,8 +10,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS, formFieldsError } from '../../constants';
-import { renameChannelAsync } from '../../redux/slices/channels';
-import { closeModal } from '../../redux/slices/modal';
+import { getChannelNames, getCurrentChannelName, renameChannelAsync } from '../../redux/slices/channels';
+import { closeModal, getChannelId } from '../../redux/slices/modal';
 import Field from '../Field';
 import InvalidFeedback from '../InvalidFeedback';
 
@@ -26,32 +26,35 @@ const getSсhema = (channelNames) => Yup.object().shape({
 const ModalRenameChannel = () => {
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const id = useSelector(({ modal: { data } }) => data.channelId);
-
-  const { currentName, channelNames } = useSelector(({ channels }) => {
-    const { name } = channels.channels.find((channel) => channel.id === id);
-    const allNames = channels.channels.map((channel) => channel.name);
-    return { currentName: name, channelNames: allNames };
+  const { channelId, channelNames, currentChannelName } = useSelector((state) => {
+    const id = getChannelId(state);
+    return {
+      channelId: id,
+      currentChannelName: getCurrentChannelName(id)(state),
+      channelNames: getChannelNames(state),
+    };
   });
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 
-  const setFocusOnField = () => {
+  const setFocusOnField = useCallback(() => {
     inputRef.current.focus();
-  };
+  }, []);
 
-  const selectInputText = () => {
+  const selectInputText = useCallback(() => {
     setFocusOnField();
     inputRef.current.select();
-  };
+  }, []);
 
   useEffect(selectInputText, []);
 
-  const handleClose = () => dispatch(closeModal());
+  const handleClose = useCallback(() => dispatch(closeModal()), []);
 
-  const handleSubmit = async ({ name }, { resetForm, setErrors }) => {
+  const handleSubmit = useCallback(async ({ name }, { resetForm, setErrors }) => {
     try {
-      const resultAction = await dispatch(renameChannelAsync({ id, name: name.trimRight() }));
+      const resultAction = await dispatch(renameChannelAsync(
+        { id: channelId, name: name.trimRight() },
+      ));
       unwrapResult(resultAction);
       resetForm();
       handleClose();
@@ -59,7 +62,7 @@ const ModalRenameChannel = () => {
       setTimeout(setFocusOnField);
       setErrors({ submittingError: ERRORS.network });
     }
-  };
+  }, []);
 
   return (
     <Modal show onHide={handleClose} restoreFocus={false}>
@@ -68,7 +71,7 @@ const ModalRenameChannel = () => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ name: currentName }}
+          initialValues={{ name: currentChannelName }}
           validationSchema={schema}
           validateOnBlur={false}
           onSubmit={handleSubmit}

@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Modal from 'react-bootstrap/Modal';
@@ -6,15 +6,15 @@ import Button from 'react-bootstrap/Button';
 
 import { ERRORS } from '../../constants';
 import { removeChannelAsync } from '../../redux/slices/channels';
-import { closeModal } from '../../redux/slices/modal';
+import { closeModal, getChannelId } from '../../redux/slices/modal';
 import InvalidFeedback from '../InvalidFeedback';
 
 const ModalConfirmRemoveChannel = () => {
-  const [submittingError, setSubmittingError] = useState(null);
   const dispatch = useDispatch();
-  const id = useSelector(({ modal: { data } }) => data.channelId);
+  const [submittingError, setSubmittingError] = useState(null);
+  const id = useSelector(getChannelId);
 
-  const handleClose = () => dispatch(closeModal());
+  const handleClose = useCallback(() => dispatch(closeModal()), []);
 
   const handleConfirmDelete = async () => {
     try {

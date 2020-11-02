@@ -1,5 +1,7 @@
-import React, { useMemo, memo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {
+  useMemo, memo, useRef, useCallback,
+} from 'react';
+import { connect } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
 import FormBootstrap from 'react-bootstrap/Form';
@@ -8,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 import { ERRORS, formFieldsError } from '../../constants';
-import { createChannelAsync } from '../../redux/slices/channels';
+import { createChannelAsync, getChannelNames } from '../../redux/slices/channels';
 import { closeModal } from '../../redux/slices/modal';
 import Field from '../Field';
 import InvalidFeedback from '../InvalidFeedback';
@@ -21,20 +23,17 @@ const getSсhema = (channelNames) => Yup.object().shape({
     .required(formFieldsError.required()),
 });
 
-const ModalAddChannel = () => {
+const ModalAddChannel = ({ channelNames, dispatch }) => {
   const inputRef = useRef();
-  const dispatch = useDispatch();
-  const channelNames = useSelector((state) => state.channels.channels.map(({ name }) => name));
-
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 
-  const setFocusOnField = () => {
+  const setFocusOnField = useCallback(() => {
     inputRef.current.focus();
-  };
+  }, []);
 
-  const handleClose = () => dispatch(closeModal());
+  const handleClose = useCallback(() => dispatch(closeModal()), []);
 
-  const handleSubmit = async ({ name }, { resetForm, setErrors }) => {
+  const handleSubmit = useCallback(async ({ name }, { resetForm, setErrors }) => {
     try {
       const resultAcion = await dispatch(createChannelAsync(name.trimRight()));
       unwrapResult(resultAcion);
@@ -44,7 +43,7 @@ const ModalAddChannel = () => {
       setTimeout(setFocusOnField);
       setErrors({ submittingError: ERRORS.network });
     }
-  };
+  }, []);
 
   return (
     <Modal show onHide={handleClose} restoreFocus={false} animation={false}>
@@ -93,4 +92,6 @@ const ModalAddChannel = () => {
   );
 };
 
-export default memo(ModalAddChannel);
+export default connect((state) => ({
+  channelNames: getChannelNames(state),
+}))(memo(ModalAddChannel));

@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
+export const getChannelId = ({ modal: { data } }) => data.channelId;
+
 const modalSlice = createSlice({
   name: 'modal',
   initialState: { isOpened: false, type: null, data: null },
