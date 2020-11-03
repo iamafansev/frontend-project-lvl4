@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import gon from 'gon';
 import io from 'socket.io-client';
 import 'core-js/stable';
@@ -21,4 +22,6 @@ const socket = io(window.location.origin);
 
 const rootElement = document.getElementById('chat');
 
-initApp(store, socket, rootElement);
+const app = initApp(store, socket, rootElement);
+
+ReactDOM.render(app, document.getElementById('chat'));
