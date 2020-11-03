@@ -40,9 +40,6 @@ const messagesSlice = createSlice({
     'channels/removeChannel': (state, { payload: channelId }) => {
       remove(state.messages, (message) => message.channelId === channelId);
     },
-    'channels/fetchChannelsWithMessages': (state, { payload: { messages: newMessages } }) => {
-      state.messages = newMessages;
-    },
   },
 });
 
