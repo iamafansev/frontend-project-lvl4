@@ -1,7 +1,7 @@
 import React, {
   useMemo, memo, useRef, useCallback,
 } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik, Form } from 'formik';
 import FormBootstrap from 'react-bootstrap/Form';
@@ -23,8 +23,11 @@ const getSсhema = (channelNames) => Yup.object().shape({
     .required(formFieldsError.required()),
 });
 
-const ModalAddChannel = ({ channelNames, dispatch }) => {
+const ModalAddChannel = () => {
   const inputRef = useRef();
+  const dispatch = useDispatch();
+  const channelNames = useSelector(getChannelNames);
+
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 
   const setFocusOnField = useCallback(() => {
@@ -92,6 +95,4 @@ const ModalAddChannel = ({ channelNames, dispatch }) => {
   );
 };
 
-export default connect((state) => ({
-  channelNames: getChannelNames(state),
-}))(memo(ModalAddChannel));
+export default memo(ModalAddChannel);

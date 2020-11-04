@@ -1,8 +1,8 @@
 import React, {
-  useEffect, useContext, useRef, useCallback,
+  useEffect, useContext, useRef, useCallback, memo,
 } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormBootstrap from 'react-bootstrap/Form';
@@ -21,7 +21,9 @@ const schema = Yup.object().shape({
     .max(400, formFieldsError.max(400)),
 });
 
-const MessageForm = ({ dispatch, channelId }) => {
+const MessageForm = () => {
+  const dispatch = useDispatch();
+  const channelId = useSelector(getCurrentChannelId);
   const { nickname } = useContext(UserContext);
   const bodyRef = useRef();
 
@@ -83,6 +85,4 @@ const MessageForm = ({ dispatch, channelId }) => {
   );
 };
 
-export default connect((state) => ({
-  channelId: getCurrentChannelId(state),
-}))(MessageForm);
+export default memo(MessageForm);

@@ -26,14 +26,9 @@ const getSсhema = (channelNames) => Yup.object().shape({
 const ModalRenameChannel = () => {
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const { channelId, channelNames, currentChannelName } = useSelector((state) => {
-    const id = getChannelId(state);
-    return {
-      channelId: id,
-      currentChannelName: getCurrentChannelName(id)(state),
-      channelNames: getChannelNames(state),
-    };
-  });
+  const channelId = useSelector(getChannelId);
+  const currentChannelName = useSelector(getCurrentChannelName(channelId));
+  const channelNames = useSelector(getChannelNames);
 
   const schema = useMemo(() => getSсhema(channelNames), [channelNames]);
 

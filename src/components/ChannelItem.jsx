@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, memo } from 'react';
 import cn from 'classnames';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +8,9 @@ import Button from 'react-bootstrap/Button';
 import { setCurrentChannelId, getCurrentChannelId } from '../redux/slices/channels';
 import { openModal } from '../redux/slices/modal';
 
-const ChannelItem = ({ dispatch, currentChannelId, item: { id, name, removable } }) => {
+const ChannelItem = ({ item: { id, name, removable } }) => {
+  const dispatch = useDispatch();
+  const currentChannelId = useSelector(getCurrentChannelId);
   const isCurrentChannel = useMemo(() => id === currentChannelId, [id, currentChannelId]);
 
   const handleClickOpenModal = (type) => () => (
@@ -59,6 +61,4 @@ const ChannelItem = ({ dispatch, currentChannelId, item: { id, name, removable }
   );
 };
 
-export default connect((state) => ({
-  currentChannelId: getCurrentChannelId(state),
-}))(memo(ChannelItem));
+export default memo(ChannelItem);
