@@ -34,7 +34,7 @@ const MessageForm = () => {
   const handleSubmit = useCallback(async ({ body }, { resetForm, setErrors }) => {
     try {
       const resultAction = await dispatch(
-        createMessageAsync({ channelId, nickname, body: body.trimRight() }),
+        createMessageAsync({ channelId, nickname, body }),
       );
 
       unwrapResult(resultAction);
@@ -61,6 +61,7 @@ const MessageForm = () => {
             <InputGroup>
               <Field
                 name="body"
+                type="text"
                 forwardRef={bodyRef}
                 disabled={isSubmitting}
                 isInvalid={submittingError}

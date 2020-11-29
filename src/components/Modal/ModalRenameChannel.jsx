@@ -48,7 +48,7 @@ const ModalRenameChannel = () => {
   const handleSubmit = useCallback(async ({ name }, { resetForm, setErrors }) => {
     try {
       const resultAction = await dispatch(renameChannelAsync(
-        { id: channelId, name: name.trimRight() },
+        { id: channelId, name },
       ));
       unwrapResult(resultAction);
       resetForm();
@@ -78,6 +78,7 @@ const ModalRenameChannel = () => {
               <FormBootstrap.Group>
                 <Field
                   name="name"
+                  type="text"
                   autoFocus
                   className="mb-2"
                   disabled={isSubmitting}

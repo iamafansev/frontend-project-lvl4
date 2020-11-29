@@ -38,7 +38,7 @@ const ModalAddChannel = () => {
 
   const handleSubmit = useCallback(async ({ name }, { resetForm, setErrors }) => {
     try {
-      const resultAcion = await dispatch(createChannelAsync(name.trimRight()));
+      const resultAcion = await dispatch(createChannelAsync(name));
       unwrapResult(resultAcion);
       resetForm();
       handleClose();
@@ -67,6 +67,7 @@ const ModalAddChannel = () => {
               <FormBootstrap.Group>
                 <Field
                   name="name"
+                  type="text"
                   autoFocus
                   className="mb-2"
                   disabled={isSubmitting}
